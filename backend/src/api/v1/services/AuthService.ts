@@ -22,9 +22,16 @@ export interface LoginDto {
   password: string;
 }
 
+function normalizeUserId(id: User['id']): number {
+  return typeof id === 'bigint' ? Number(id) : Number(id);
+}
+
 function toPublicUser(user: User): PublicUser {
   const { password_hash: _password, ...rest } = user;
-  return rest;
+  return {
+    ...rest,
+    id: normalizeUserId(user.id),
+  };
 }
 
 export async function register(dto: RegisterDto) {
@@ -48,7 +55,11 @@ export async function register(dto: RegisterDto) {
     throw new AppError('User creation failed', 500, 'USER_CREATE_FAILED');
   }
 
-  const token = signToken({ id: user.id, email: user.email, role: user.role });
+  const token = signToken({
+    id: normalizeUserId(user.id),
+    email: user.email,
+    role: user.role,
+  });
 
   return { user: toPublicUser(user), token };
 }
@@ -64,7 +75,11 @@ export async function login(dto: LoginDto) {
     throw new AppError('Invalid email or password', 401, 'INVALID_CREDENTIALS');
   }
 
-  const token = signToken({ id: user.id, email: user.email, role: user.role });
+  const token = signToken({
+    id: normalizeUserId(user.id),
+    email: user.email,
+    role: user.role,
+  });
 
   return { user: toPublicUser(user), token };
 }

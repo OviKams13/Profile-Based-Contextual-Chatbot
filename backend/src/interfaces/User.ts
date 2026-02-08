@@ -1,5 +1,5 @@
 export interface User {
-  id: number;
+  id: number | bigint;
   email: string;
   password_hash: string;
   role: 'dean' | 'applicant';

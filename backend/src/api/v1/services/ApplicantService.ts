@@ -19,11 +19,7 @@ export async function getProfile(userId: number) {
 
 type ApplicantProfilePayload = Omit<ApplicantProfileInput, 'reference_code'>;
 
-export async function upsertProfile(
-  userId: number,
-  dto: ApplicantProfilePayload,
-  fallbackEmail: string,
-) {
+export async function upsertProfile(userId: number, dto: ApplicantProfilePayload) {
   const pool = getPool();
   const conn = await pool.getConnection();
   try {
@@ -31,19 +27,15 @@ export async function upsertProfile(
 
     const existing = await findByUserIdForUpdate(conn, userId);
     const reference_code = existing?.reference_code ?? dto.reference_code ?? generateReferenceCode();
-    const email_address = dto.email_address ?? fallbackEmail;
-
     if (existing) {
       await updateProfile(conn, userId, {
         ...dto,
         reference_code,
-        email_address,
       });
     } else {
       await insertProfile(conn, userId, {
         ...dto,
         reference_code,
-        email_address,
       });
     }
 

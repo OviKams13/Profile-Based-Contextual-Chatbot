@@ -16,8 +16,6 @@ export const applicantProfileSchema = z
     id_no: z.string().trim().min(3).max(30),
     place_of_birth: z.string().trim().min(2).max(120),
     contact_number: z.string().trim().min(5).max(30),
-    email_address: z.string().trim().email().optional(),
-    application_owner: z.string().trim().min(2).max(120).optional(),
     country: z.string().trim().min(2).max(80),
     address_line: z.string().trim().min(2).max(150),
     city: z.string().trim().min(2).max(80),

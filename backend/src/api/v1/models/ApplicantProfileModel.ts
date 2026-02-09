@@ -12,8 +12,6 @@ export interface ApplicantProfileInput {
   id_no: string;
   place_of_birth: string;
   contact_number: string;
-  email_address?: string | null;
-  application_owner?: string | null;
   country: string;
   address_line: string;
   city: string;
@@ -69,8 +67,8 @@ export async function insertProfile(
 ): Promise<number> {
   const [result] = await conn.query<ResultSetHeader>(
     `INSERT INTO applicant_profiles
-      (user_id, reference_code, first_name, last_name, date_of_birth, gender, passport_no, id_no, place_of_birth, contact_number, email_address, application_owner, country, address_line, city, state, zip_postcode, mother_full_name, father_full_name, heard_about_university)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (user_id, reference_code, first_name, last_name, date_of_birth, gender, passport_no, id_no, place_of_birth, contact_number, country, address_line, city, state, zip_postcode, mother_full_name, father_full_name, heard_about_university)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       userId,
       input.reference_code,
@@ -82,8 +80,6 @@ export async function insertProfile(
       input.id_no,
       input.place_of_birth,
       input.contact_number,
-      input.email_address ?? null,
-      input.application_owner ?? null,
       input.country,
       input.address_line,
       input.city,
@@ -104,7 +100,7 @@ export async function updateProfile(
 ): Promise<boolean> {
   const [result] = await conn.query<ResultSetHeader>(
     `UPDATE applicant_profiles
-     SET reference_code = ?, first_name = ?, last_name = ?, date_of_birth = ?, gender = ?, passport_no = ?, id_no = ?, place_of_birth = ?, contact_number = ?, email_address = ?, application_owner = ?, country = ?, address_line = ?, city = ?, state = ?, zip_postcode = ?, mother_full_name = ?, father_full_name = ?, heard_about_university = ?
+     SET reference_code = ?, first_name = ?, last_name = ?, date_of_birth = ?, gender = ?, passport_no = ?, id_no = ?, place_of_birth = ?, contact_number = ?, country = ?, address_line = ?, city = ?, state = ?, zip_postcode = ?, mother_full_name = ?, father_full_name = ?, heard_about_university = ?
      WHERE user_id = ?`,
     [
       input.reference_code,
@@ -116,8 +112,6 @@ export async function updateProfile(
       input.id_no,
       input.place_of_birth,
       input.contact_number,
-      input.email_address ?? null,
-      input.application_owner ?? null,
       input.country,
       input.address_line,
       input.city,

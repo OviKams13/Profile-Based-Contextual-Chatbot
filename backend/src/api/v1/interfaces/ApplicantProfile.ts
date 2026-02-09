@@ -10,8 +10,6 @@ export interface ApplicantProfile {
   id_no: string;
   place_of_birth: string;
   contact_number: string;
-  email_address: string | null;
-  application_owner: string | null;
   country: string;
   address_line: string;
   city: string;

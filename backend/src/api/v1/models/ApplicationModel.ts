@@ -5,6 +5,7 @@ import { Application, ApplicationListItem } from '../interfaces/Application';
 export interface CreateApplicationInput {
   applicant_id: number;
   program_id: number;
+  created_by: number;
   status?: 'submitted' | 'accepted' | 'rejected';
 }
 
@@ -27,8 +28,8 @@ export async function createApplication(
   input: CreateApplicationInput,
 ): Promise<number> {
   const [result] = await conn.query<ResultSetHeader>(
-    'INSERT INTO applications (applicant_id, program_id, status) VALUES (?, ?, ?)',
-    [input.applicant_id, input.program_id, input.status ?? 'submitted'],
+    'INSERT INTO applications (applicant_id, program_id, created_by, status) VALUES (?, ?, ?, ?)',
+    [input.applicant_id, input.program_id, input.created_by, input.status ?? 'submitted'],
   );
   return result.insertId;
 }

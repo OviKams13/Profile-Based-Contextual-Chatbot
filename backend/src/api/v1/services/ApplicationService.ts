@@ -53,6 +53,7 @@ export async function submitApplication(
     const applicationId = await createApplication(conn, {
       applicant_id: Number(refreshedProfile.id),
       program_id: programId,
+      created_by: userId,
       status: 'submitted',
     });
 

@@ -2,10 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { testDbConnection, getPool } from './config/DatabaseConfig';
+import v1Router from './api/v1/routes';
+import { notFound } from './api/v1/middlewares/notFound';
+import { errorHandler } from './api/v1/middlewares/errorHandler';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger';
 
 dotenv.config();
 
-const app = express();
+export const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -21,11 +26,12 @@ app.get('/health', async (req, res) => {
   }
 });
 
-const port = process.env.PORT ? Number(process.env.PORT) : 4000;
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/v1', v1Router);
+app.use(notFound);
+app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 
 async function start() {
   try {
@@ -40,4 +46,6 @@ async function start() {
   }
 }
 
-start();
+if (process.env.NODE_ENV !== 'test') {
+  start();
+}

@@ -22,7 +22,7 @@ export async function updateProfile(req: Request, res: Response, next: NextFunct
       throw new AppError('Unauthorized', 401, 'UNAUTHORIZED');
     }
     updateApplicantProfileSchema.parse({ body: req.body });
-    const profile = await ApplicantService.upsertProfile(req.user.id, req.body);
+    const profile = await ApplicantService.upsertProfile(req.user.id, req.body, req.user.email);
     return ok(res, { profile }, 200);
   } catch (error) {
     return next(error);

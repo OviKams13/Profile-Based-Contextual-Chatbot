@@ -4,6 +4,7 @@ import { Course } from '../interfaces/Course';
 
 export interface CreateCourseInput {
   program_id: number;
+  created_by?: number;
   year_number: number;
   course_name: string;
   course_code: string;
@@ -50,6 +51,34 @@ function toCourse(row: Course): Course {
 
 export async function createCourse(input: CreateCourseInput): Promise<number> {
   const pool = getPool();
+  if (input.created_by !== undefined) {
+    try {
+      const [result] = await pool.query<ResultSetHeader>(
+        `INSERT INTO courses
+          (program_id, created_by, year_number, course_name, course_code, credits, theoretical_hours, practical_hours, distance_hours, ects, course_description)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          input.program_id,
+          input.created_by,
+          input.year_number,
+          input.course_name,
+          input.course_code,
+          input.credits,
+          input.theoretical_hours,
+          input.practical_hours,
+          input.distance_hours,
+          input.ects,
+          input.course_description,
+        ],
+      );
+      return result.insertId;
+    } catch (error: any) {
+      if (error?.code !== 'ER_BAD_FIELD_ERROR') {
+        throw error;
+      }
+    }
+  }
+
   const [result] = await pool.query<ResultSetHeader>(
     `INSERT INTO courses
       (program_id, year_number, course_name, course_code, credits, theoretical_hours, practical_hours, distance_hours, ects, course_description)

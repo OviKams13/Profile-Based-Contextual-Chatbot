@@ -56,6 +56,7 @@ export async function createForProgram(
   const courseId = await createCourse({
     ...normalized,
     program_id: programId,
+    created_by: deanId,
   });
 
   const course = await findById(courseId);

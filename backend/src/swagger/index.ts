@@ -21,6 +21,51 @@ const swaggerDefinition = {
       },
     },
     schemas: {
+      Course: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          program_id: { type: 'number', example: 1 },
+          year_number: { type: 'number', example: 1 },
+          course_name: { type: 'string', example: 'Introduction to Programming' },
+          course_code: { type: 'string', example: 'SE101' },
+          credits: { type: 'number', example: 3 },
+          theoretical_hours: { type: 'number', example: 2 },
+          practical_hours: { type: 'number', example: 2 },
+          distance_hours: { type: 'number', example: 0 },
+          ects: { type: 'number', example: 7.5 },
+          course_description: { type: 'string', example: 'Basics of programming...' },
+          created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+        },
+      },
+      CourseResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              course: { $ref: '#/components/schemas/Course' },
+            },
+          },
+        },
+      },
+      CourseListResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              program_id: { type: 'number', example: 1 },
+              items: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/Course' },
+              },
+            },
+          },
+        },
+      },
       Program: {
         type: 'object',
         properties: {
@@ -328,6 +373,142 @@ const swaggerDefinition = {
         },
       },
     },
+    '/api/v1/programs/{programId}/courses': {
+      get: {
+        tags: ['Courses'],
+        summary: 'List courses for a program',
+        parameters: [
+          {
+            name: 'programId',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+          {
+            name: 'year',
+            in: 'query',
+            schema: { type: 'number', example: 1 },
+          },
+          {
+            name: 'sort',
+            in: 'query',
+            schema: { type: 'string', enum: ['year', 'name'] },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Courses list',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/CourseListResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Program not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ['Courses'],
+        summary: 'Create a course for a program',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'programId',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  year_number: { type: 'number', example: 1 },
+                  course_name: { type: 'string', example: 'Introduction to Programming' },
+                  course_code: { type: 'string', example: 'SE101' },
+                  credits: { type: 'number', example: 3 },
+                  theoretical_hours: { type: 'number', example: 2 },
+                  practical_hours: { type: 'number', example: 2 },
+                  distance_hours: { type: 'number', example: 0 },
+                  ects: { type: 'number', example: 7.5 },
+                  course_description: { type: 'string', example: 'Basics of programming...' },
+                },
+                required: [
+                  'year_number',
+                  'course_name',
+                  'course_code',
+                  'credits',
+                  'theoretical_hours',
+                  'practical_hours',
+                  'distance_hours',
+                  'course_description',
+                ],
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'Course created',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/CourseResponse' },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Program not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          409: {
+            description: 'Course code already exists',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
     '/api/v1/programs/{id}': {
       get: {
         tags: ['Programs'],
@@ -413,6 +594,190 @@ const swaggerDefinition = {
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/courses/{id}': {
+      get: {
+        tags: ['Courses'],
+        summary: 'Get course by id',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Course details',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/CourseResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+      put: {
+        tags: ['Courses'],
+        summary: 'Update course',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  year_number: { type: 'number', example: 1 },
+                  course_name: { type: 'string', example: 'Introduction to Programming' },
+                  course_code: { type: 'string', example: 'SE101' },
+                  credits: { type: 'number', example: 3 },
+                  theoretical_hours: { type: 'number', example: 2 },
+                  practical_hours: { type: 'number', example: 2 },
+                  distance_hours: { type: 'number', example: 0 },
+                  ects: { type: 'number', example: 7.5 },
+                  course_description: { type: 'string', example: 'Basics of programming...' },
+                },
+                required: [
+                  'year_number',
+                  'course_name',
+                  'course_code',
+                  'credits',
+                  'theoretical_hours',
+                  'practical_hours',
+                  'distance_hours',
+                  'course_description',
+                ],
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Course updated',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/CourseResponse' },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          409: {
+            description: 'Course code already exists',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        tags: ['Courses'],
+        summary: 'Delete course',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Course deleted',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        deleted: { type: 'boolean', example: true },
+                      },
+                    },
+                  },
+                },
               },
             },
           },

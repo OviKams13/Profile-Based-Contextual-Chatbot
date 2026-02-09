@@ -21,6 +21,48 @@ const swaggerDefinition = {
       },
     },
     schemas: {
+      ProgramCoordinator: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 12 },
+          full_name: { type: 'string', example: 'Dr. John Smith' },
+          email: { type: 'string', example: 'john.smith@university.edu' },
+          picture: { type: 'string', nullable: true, example: 'https://example.com/pic.jpg' },
+          telephone_number: { type: 'string', nullable: true, example: '+90 5xx xxx xx xx' },
+          nationality: { type: 'string', nullable: true, example: 'Cyprus' },
+          academic_qualification: { type: 'string', nullable: true, example: 'PhD' },
+          speciality: { type: 'string', nullable: true, example: 'Software Engineering' },
+          office_location: { type: 'string', nullable: true, example: 'Engineering Building, Room 203' },
+          office_hours: { type: 'string', nullable: true, example: 'Mon-Fri 10:00-12:00' },
+          created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+        },
+      },
+      ProgramCoordinatorResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              program_coordinator: { $ref: '#/components/schemas/ProgramCoordinator' },
+            },
+          },
+        },
+      },
+      AssignCoordinatorRequest: {
+        type: 'object',
+        properties: {
+          program_coordinator_id: { type: 'number', nullable: true, example: 12 },
+        },
+        required: ['program_coordinator_id'],
+      },
+      ProgramMinimal: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          program_coordinator_id: { type: 'number', nullable: true, example: 12 },
+        },
+      },
       Course: {
         type: 'object',
         properties: {
@@ -373,6 +415,194 @@ const swaggerDefinition = {
         },
       },
     },
+    '/api/v1/program-coordinators': {
+      post: {
+        tags: ['ProgramCoordinators'],
+        summary: 'Create program coordinator',
+        security: [{ BearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  full_name: { type: 'string', example: 'Dr. John Smith' },
+                  email: { type: 'string', example: 'john.smith@university.edu' },
+                  picture: { type: 'string', example: 'https://example.com/pic.jpg' },
+                  telephone_number: { type: 'string', example: '+90 5xx xxx xx xx' },
+                  nationality: { type: 'string', example: 'Cyprus' },
+                  academic_qualification: { type: 'string', example: 'PhD' },
+                  speciality: { type: 'string', example: 'Software Engineering' },
+                  office_location: { type: 'string', example: 'Engineering Building, Room 203' },
+                  office_hours: { type: 'string', example: 'Mon-Fri 10:00-12:00' },
+                },
+                required: ['full_name', 'email'],
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'Program coordinator created',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ProgramCoordinatorResponse' },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          409: {
+            description: 'Email already exists',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/program-coordinators/{id}': {
+      get: {
+        tags: ['ProgramCoordinators'],
+        summary: 'Get program coordinator by id',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Program coordinator details',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ProgramCoordinatorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+      put: {
+        tags: ['ProgramCoordinators'],
+        summary: 'Update program coordinator',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  full_name: { type: 'string', example: 'Dr. John Smith' },
+                  email: { type: 'string', example: 'john.smith@university.edu' },
+                  picture: { type: 'string', example: 'https://example.com/pic.jpg' },
+                  telephone_number: { type: 'string', example: '+90 5xx xxx xx xx' },
+                  nationality: { type: 'string', example: 'Cyprus' },
+                  academic_qualification: { type: 'string', example: 'PhD' },
+                  speciality: { type: 'string', example: 'Software Engineering' },
+                  office_location: { type: 'string', example: 'Engineering Building, Room 203' },
+                  office_hours: { type: 'string', example: 'Mon-Fri 10:00-12:00' },
+                },
+                required: ['full_name', 'email'],
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Program coordinator updated',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ProgramCoordinatorResponse' },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          409: {
+            description: 'Email already exists',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
     '/api/v1/programs/{programId}/courses': {
       get: {
         tags: ['Courses'],
@@ -586,6 +816,80 @@ const swaggerDefinition = {
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ProgramResponse' },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+      patch: {
+        tags: ['Programs'],
+        summary: 'Assign program coordinator',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/AssignCoordinatorRequest' },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Program coordinator assigned',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        program: { $ref: '#/components/schemas/ProgramMinimal' },
+                      },
+                    },
+                  },
+                },
               },
             },
           },

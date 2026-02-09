@@ -8,8 +8,10 @@ import {
   updateProgram,
   CreateProgramInput,
   UpdateProgramInput,
+  updateProgramCoordinator,
 } from '../models/ProgramModel';
 import { ProgramListQuery } from '../types/Pagination';
+import { findById as findCoordinatorById } from '../models/ProgramCoordinatorModel';
 
 function normalizeProgramId(id: Program['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
@@ -71,4 +73,33 @@ export async function updateProgramForDean(
   }
 
   return refreshed;
+}
+
+export async function assignCoordinator(
+  programId: number,
+  coordinatorId: number | null,
+  deanId: number,
+) {
+  const program = await findById(programId);
+  if (!program) {
+    throw new AppError('Program not found', 404, 'PROGRAM_NOT_FOUND');
+  }
+
+  if (normalizeProgramId(program.created_by) !== deanId) {
+    throw new AppError('Forbidden', 403, 'FORBIDDEN');
+  }
+
+  if (coordinatorId !== null) {
+    const coordinator = await findCoordinatorById(coordinatorId);
+    if (!coordinator) {
+      throw new AppError('Program coordinator not found', 404, 'COORDINATOR_NOT_FOUND');
+    }
+  }
+
+  const updated = await updateProgramCoordinator(programId, coordinatorId);
+  if (!updated) {
+    throw new AppError('Program update failed', 500, 'PROGRAM_UPDATE_FAILED');
+  }
+
+  return { id: programId, program_coordinator_id: coordinatorId };
 }

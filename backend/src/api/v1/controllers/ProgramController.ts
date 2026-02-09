@@ -6,6 +6,7 @@ import {
   programIdSchema,
 } from '../validations/programValidation';
 import { AppError } from '../helpers/AppError';
+import { assignCoordinatorSchema } from '../validations/programCoordinatorValidation';
 
 export async function create(req: Request, res: Response, next: NextFunction) {
   try {
@@ -48,6 +49,23 @@ export async function update(req: Request, res: Response, next: NextFunction) {
     const program = await ProgramService.updateProgramForDean(
       parsed.params.id,
       req.body,
+      req.user.id,
+    );
+    return ok(res, { program }, 200);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function assignCoordinator(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.user) {
+      throw new AppError('Unauthorized', 401, 'UNAUTHORIZED');
+    }
+    const parsed = assignCoordinatorSchema.parse({ params: req.params, body: req.body });
+    const program = await ProgramService.assignCoordinator(
+      parsed.params.id,
+      parsed.body.program_coordinator_id,
       req.user.id,
     );
     return ok(res, { program }, 200);

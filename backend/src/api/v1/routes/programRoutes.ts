@@ -4,6 +4,7 @@ import { requireAuth } from '../middlewares/requireAuth';
 import { requireRole } from '../middlewares/requireRole';
 import { validateRequest } from '../middlewares/validateRequest';
 import { createProgramSchema, updateProgramSchema } from '../validations/programValidation';
+import { assignCoordinatorSchema } from '../validations/programCoordinatorValidation';
 
 const router = Router();
 
@@ -22,6 +23,13 @@ router.put(
   requireRole('dean'),
   validateRequest(updateProgramSchema),
   ProgramController.update,
+);
+router.patch(
+  '/:id/assign-coordinator',
+  requireAuth,
+  requireRole('dean'),
+  validateRequest(assignCoordinatorSchema),
+  ProgramController.assignCoordinator,
 );
 
 export default router;

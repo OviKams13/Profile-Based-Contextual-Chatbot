@@ -95,6 +95,18 @@ export async function updateProgram(id: number, input: UpdateProgramInput): Prom
   return result.affectedRows > 0;
 }
 
+export async function updateProgramCoordinator(
+  id: number,
+  coordinatorId: number | null,
+): Promise<boolean> {
+  const pool = getPool();
+  const [result] = await pool.query<ResultSetHeader>(
+    'UPDATE programs SET program_coordinator_id = ? WHERE id = ?',
+    [coordinatorId, id],
+  );
+  return result.affectedRows > 0;
+}
+
 function buildFilters(query: ProgramListQuery) {
   const whereClauses: string[] = [];
   const params: Array<string | number> = [];

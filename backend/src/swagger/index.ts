@@ -63,6 +63,86 @@ const swaggerDefinition = {
           program_coordinator_id: { type: 'number', nullable: true, example: 12 },
         },
       },
+      ApplicantProfile: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          user_id: { type: 'number', example: 5 },
+          reference_code: { type: 'string', example: 'APP-ABC123' },
+          first_name: { type: 'string', example: 'Zeka' },
+          last_name: { type: 'string', example: 'Shadrac' },
+          date_of_birth: { type: 'string', example: '2002-01-01' },
+          gender: { type: 'string', example: 'male' },
+          passport_no: { type: 'string', example: 'P1234567' },
+          id_no: { type: 'string', example: 'ID998877' },
+          place_of_birth: { type: 'string', example: 'Nicosia' },
+          contact_number: { type: 'string', example: '+90 5xx xxx xx xx' },
+          email_address: { type: 'string', nullable: true, example: 'zeka@test.com' },
+          application_owner: { type: 'string', nullable: true, example: 'Self' },
+          country: { type: 'string', example: 'Cyprus' },
+          address_line: { type: 'string', example: 'Street 1' },
+          city: { type: 'string', example: 'Lefkosa' },
+          state: { type: 'string', example: 'TRNC' },
+          zip_postcode: { type: 'string', example: '99010' },
+          mother_full_name: { type: 'string', example: 'Mother Name' },
+          father_full_name: { type: 'string', example: 'Father Name' },
+          heard_about_university: { type: 'string', example: 'Instagram' },
+          created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+        },
+      },
+      Application: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          applicant_id: { type: 'number', example: 1 },
+          program_id: { type: 'number', example: 1 },
+          status: { type: 'string', enum: ['submitted', 'accepted', 'rejected'], example: 'submitted' },
+          created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+        },
+      },
+      ApplicationListItem: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          program_id: { type: 'number', example: 1 },
+          status: { type: 'string', enum: ['submitted', 'accepted', 'rejected'], example: 'submitted' },
+          created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+          program: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: 'Software Engineering' },
+              level: { type: 'string', enum: ['undergraduate', 'postgraduate'], example: 'undergraduate' },
+            },
+          },
+        },
+      },
+      SubmitApplicationRequest: {
+        type: 'object',
+        properties: {
+          program_id: { type: 'number', example: 1 },
+          profile: { $ref: '#/components/schemas/ApplicantProfile' },
+        },
+        required: ['program_id', 'profile'],
+      },
+      ApplicationListResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/ApplicationListItem' },
+              },
+              page: { type: 'number', example: 1 },
+              limit: { type: 'number', example: 10 },
+              total: { type: 'number', example: 1 },
+            },
+          },
+        },
+      },
       Course: {
         type: 'object',
         properties: {
@@ -301,6 +381,238 @@ const swaggerDefinition = {
           },
           401: {
             description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/applicant/profile': {
+      get: {
+        tags: ['Applicants'],
+        summary: 'Get applicant profile',
+        security: [{ BearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'Applicant profile',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        profile: { $ref: '#/components/schemas/ApplicantProfile' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Profile not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+      put: {
+        tags: ['Applicants'],
+        summary: 'Upsert applicant profile',
+        security: [{ BearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ApplicantProfile' },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Applicant profile updated',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        profile: { $ref: '#/components/schemas/ApplicantProfile' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/applications': {
+      post: {
+        tags: ['Applications'],
+        summary: 'Submit application',
+        security: [{ BearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/SubmitApplicationRequest' },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'Application submitted',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        application: { $ref: '#/components/schemas/Application' },
+                        profile: { $ref: '#/components/schemas/ApplicantProfile' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Program not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/applications/me': {
+      get: {
+        tags: ['Applications'],
+        summary: 'List my applications',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'page',
+            in: 'query',
+            schema: { type: 'number', example: 1 },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            schema: { type: 'number', example: 10 },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Applications list',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ApplicationListResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Profile not found',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },

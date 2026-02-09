@@ -21,6 +21,52 @@ const swaggerDefinition = {
       },
     },
     schemas: {
+      Program: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          created_by: { type: 'number', example: 10 },
+          program_coordinator_id: { type: 'number', nullable: true, example: null },
+          name: { type: 'string', example: 'Software Engineering' },
+          level: { type: 'string', enum: ['undergraduate', 'postgraduate'], example: 'undergraduate' },
+          duration_years: { type: 'number', example: 4 },
+          short_description: { type: 'string', example: 'Build modern software systems.' },
+          about_text: { type: 'string', example: 'About program...' },
+          entry_requirements_text: { type: 'string', example: 'Requirements...' },
+          scholarships_text: { type: 'string', example: 'Scholarships...' },
+          created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+        },
+      },
+      ProgramResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              program: { $ref: '#/components/schemas/Program' },
+            },
+          },
+        },
+      },
+      ProgramListResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/Program' },
+              },
+              page: { type: 'number', example: 1 },
+              limit: { type: 'number', example: 10 },
+              total: { type: 'number', example: 42 },
+            },
+          },
+        },
+      },
       AuthUser: {
         type: 'object',
         properties: {
@@ -168,6 +214,226 @@ const swaggerDefinition = {
           },
           401: {
             description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/programs': {
+      get: {
+        tags: ['Programs'],
+        summary: 'List programs',
+        parameters: [
+          {
+            name: 'page',
+            in: 'query',
+            schema: { type: 'number', example: 1 },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            schema: { type: 'number', example: 10 },
+          },
+          {
+            name: 'level',
+            in: 'query',
+            schema: { type: 'string', enum: ['undergraduate', 'postgraduate'] },
+          },
+          {
+            name: 'search',
+            in: 'query',
+            schema: { type: 'string', example: 'Software' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Programs list',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ProgramListResponse' },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ['Programs'],
+        summary: 'Create a program',
+        security: [{ BearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', example: 'Software Engineering' },
+                  level: { type: 'string', enum: ['undergraduate', 'postgraduate'] },
+                  duration_years: { type: 'number', example: 4 },
+                  short_description: { type: 'string', example: 'Build modern software systems.' },
+                  about_text: { type: 'string', example: 'About program...' },
+                  entry_requirements_text: { type: 'string', example: 'Requirements...' },
+                  scholarships_text: { type: 'string', example: 'Scholarships...' },
+                },
+                required: [
+                  'name',
+                  'level',
+                  'duration_years',
+                  'short_description',
+                  'about_text',
+                  'entry_requirements_text',
+                  'scholarships_text',
+                ],
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'Program created',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ProgramResponse' },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/programs/{id}': {
+      get: {
+        tags: ['Programs'],
+        summary: 'Get program by id',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Program details',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ProgramResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+      put: {
+        tags: ['Programs'],
+        summary: 'Update program',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', example: 'Software Engineering' },
+                  level: { type: 'string', enum: ['undergraduate', 'postgraduate'] },
+                  duration_years: { type: 'number', example: 4 },
+                  short_description: { type: 'string', example: 'Build modern software systems.' },
+                  about_text: { type: 'string', example: 'About program...' },
+                  entry_requirements_text: { type: 'string', example: 'Requirements...' },
+                  scholarships_text: { type: 'string', example: 'Scholarships...' },
+                },
+                required: [
+                  'name',
+                  'level',
+                  'duration_years',
+                  'short_description',
+                  'about_text',
+                  'entry_requirements_text',
+                  'scholarships_text',
+                ],
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Program updated',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ProgramResponse' },
+              },
+            },
+          },
+          400: {
+            description: 'Validation error',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },

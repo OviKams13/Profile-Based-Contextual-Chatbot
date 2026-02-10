@@ -26,10 +26,12 @@ export interface UpdateProgramCoordinatorInput {
   office_hours?: string | null;
 }
 
+// Converts bigint coordinator ids for consistent API typing.
 function normalizeId(id: ProgramCoordinator['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Normalizes DB row into coordinator domain structure.
 function toCoordinator(row: ProgramCoordinator): ProgramCoordinator {
   return {
     ...row,
@@ -37,6 +39,7 @@ function toCoordinator(row: ProgramCoordinator): ProgramCoordinator {
   };
 }
 
+// Inserts coordinator profile used by program assignments.
 export async function createCoordinator(input: CreateProgramCoordinatorInput): Promise<number> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -58,6 +61,7 @@ export async function createCoordinator(input: CreateProgramCoordinatorInput): P
   return result.insertId;
 }
 
+// Loads coordinator record for detail and assignment checks.
 export async function findById(id: number): Promise<ProgramCoordinator | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & ProgramCoordinator[]>(
@@ -70,6 +74,7 @@ export async function findById(id: number): Promise<ProgramCoordinator | null> {
   return toCoordinator(rows[0]);
 }
 
+// Loads coordinator by email to enforce uniqueness.
 export async function findByEmail(email: string): Promise<ProgramCoordinator | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & ProgramCoordinator[]>(
@@ -82,6 +87,7 @@ export async function findByEmail(email: string): Promise<ProgramCoordinator | n
   return toCoordinator(rows[0]);
 }
 
+// Updates mutable coordinator profile fields by id.
 export async function updateCoordinator(
   id: number,
   input: UpdateProgramCoordinatorInput,

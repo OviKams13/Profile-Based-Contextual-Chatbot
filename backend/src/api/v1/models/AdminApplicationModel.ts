@@ -19,6 +19,7 @@ export interface ApplicationStatusRow {
   status: 'submitted' | 'accepted' | 'rejected';
 }
 
+// Normalizes nullable reviewer ids from DB numeric formats.
 function normalizeId(id: number | bigint | null): number | null {
   if (id === null) {
     return null;
@@ -51,6 +52,7 @@ function buildWhereClause(filters: AdminApplicationListFilters) {
   return { clause, params };
 }
 
+// Returns filtered inbox rows plus pagination count.
 export async function listApplications(
   filters: AdminApplicationListFilters,
   page: number,
@@ -116,6 +118,7 @@ export async function listApplications(
   return { items, total };
 }
 
+// Loads full review payload with program and applicant profile.
 export async function findApplicationDetailById(id: number): Promise<AdminApplicationDetail | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[]>(
@@ -197,6 +200,7 @@ export async function findApplicationDetailById(id: number): Promise<AdminApplic
   };
 }
 
+// Fetches minimal status for transition guard checks.
 export async function findApplicationStatusById(id: number): Promise<ApplicationStatusRow | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[]>(
@@ -212,6 +216,7 @@ export async function findApplicationStatusById(id: number): Promise<Application
   };
 }
 
+// Persists decision status and reviewer audit timestamp.
 export async function updateStatusReviewed(
   id: number,
   status: 'accepted' | 'rejected',

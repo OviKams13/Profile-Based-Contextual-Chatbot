@@ -14,6 +14,7 @@ import { findById as findProgramById } from '../models/ProgramModel';
 
 type ApplicantProfilePayload = Omit<ApplicantProfileInput, 'reference_code'>;
 
+// Executes profile upsert and application insert atomically.
 export async function submitApplication(
   userId: number,
   programId: number,
@@ -75,6 +76,7 @@ export async function submitApplication(
   }
 }
 
+// Lists applications linked to caller applicant profile only.
 export async function listMyApplications(userId: number, page?: number, limit?: number) {
   const profile = await findByUserId(userId);
   if (!profile) {

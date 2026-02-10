@@ -11,11 +11,13 @@ function getSaltRounds(): number {
   return rounds;
 }
 
+// Hashes raw password before storing credentials in DB.
 export async function hashPassword(password: string): Promise<string> {
   const saltRounds = getSaltRounds();
   return bcrypt.hash(password, saltRounds);
 }
 
+// Compares login password with stored bcrypt hash.
 export async function comparePassword(
   password: string,
   passwordHash: string,

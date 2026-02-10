@@ -8,6 +8,7 @@ import {
 import { AppError } from '../helpers/AppError';
 import { assignCoordinatorSchema } from '../validations/programCoordinatorValidation';
 
+// Creates a program under the authenticated dean ownership boundary.
 export async function create(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -20,6 +21,7 @@ export async function create(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Exposes public program catalog with pagination/filter inputs.
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
     const parsed = listProgramsSchema.parse({ query: req.query });
@@ -30,6 +32,7 @@ export async function list(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Returns one program detail for public browsing and admissions decisions.
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     const parsed = programIdSchema.parse({ params: req.params });
@@ -40,6 +43,7 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Allows only owner dean to mutate program academic content.
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -57,6 +61,7 @@ export async function update(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Attaches or clears coordinator assignment for a dean-owned program.
 export async function assignCoordinator(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

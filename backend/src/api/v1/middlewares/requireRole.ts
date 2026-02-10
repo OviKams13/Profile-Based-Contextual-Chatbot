@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../helpers/AppError';
 
+// Enforces role-based access for dean/applicant protected routes.
 export function requireRole(role: 'dean' | 'applicant') {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user) {

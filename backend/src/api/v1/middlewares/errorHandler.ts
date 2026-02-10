@@ -3,6 +3,7 @@ import { ZodError } from 'zod';
 import { AppError } from '../helpers/AppError';
 import { fail } from '../helpers/response';
 
+// Transforms validation/business/system errors into API error contract.
 export function errorHandler(
   err: unknown,
   _req: Request,

@@ -35,6 +35,7 @@ app.use(errorHandler);
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 
+// Bootstraps server only after successful database connectivity check.
 async function start() {
   try {
     // Fail fast on boot if MySQL is unavailable so we do not serve partial functionality.

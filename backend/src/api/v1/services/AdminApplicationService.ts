@@ -8,6 +8,7 @@ import {
   updateStatusReviewed,
 } from '../models/AdminApplicationModel';
 
+// Provides dean inbox with pagination metadata.
 export async function listAdminApplications(
   filters: AdminApplicationListFilters,
   page?: number,
@@ -24,6 +25,7 @@ export async function listAdminApplications(
   };
 }
 
+// Loads review detail and fails fast when missing.
 export async function getAdminApplicationDetail(id: number) {
   const application = await findApplicationDetailById(id);
   if (!application) {
@@ -32,6 +34,7 @@ export async function getAdminApplicationDetail(id: number) {
   return application;
 }
 
+// Centralizes review transition rules and conflict protection.
 async function reviewApplication(id: number, deanUserId: number, status: 'accepted' | 'rejected') {
   const existing = await findApplicationStatusById(id);
   if (!existing) {
@@ -49,10 +52,12 @@ async function reviewApplication(id: number, deanUserId: number, status: 'accept
   return updated;
 }
 
+// Applies accepted decision through shared review guardrails.
 export async function acceptApplication(id: number, deanUserId: number) {
   return reviewApplication(id, deanUserId, 'accepted');
 }
 
+// Applies rejected decision through shared review guardrails.
 export async function rejectApplication(id: number, deanUserId: number) {
   return reviewApplication(id, deanUserId, 'rejected');
 }

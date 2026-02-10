@@ -13,6 +13,7 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+// Creates coordinator profile and blocks duplicate email identities.
 export async function create(dto: CreateProgramCoordinatorInput) {
   const normalizedEmail = normalizeEmail(dto.email);
   const existing = await findByEmail(normalizedEmail);
@@ -33,6 +34,7 @@ export async function create(dto: CreateProgramCoordinatorInput) {
   return coordinator;
 }
 
+// Returns one coordinator profile or explicit not-found error.
 export async function getById(id: number) {
   const coordinator = await findById(id);
   if (!coordinator) {
@@ -41,6 +43,7 @@ export async function getById(id: number) {
   return coordinator;
 }
 
+// Updates coordinator while protecting email uniqueness constraints.
 export async function update(id: number, dto: UpdateProgramCoordinatorInput) {
   const existing = await findById(id);
   if (!existing) {

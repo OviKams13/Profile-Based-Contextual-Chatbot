@@ -11,6 +11,7 @@ const testUser = {
 };
 
 // Confirms registration/login token flow and protected /me identity lookup.
+// Verifies auth registration, login, and protected identity retrieval contract.
 describe('Auth API', () => {
   beforeAll(async () => {
     const pool = getPool();

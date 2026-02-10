@@ -22,10 +22,12 @@ export interface ApplicantProfileInput {
   heard_about_university: string;
 }
 
+// Converts bigint profile ids for API-safe numeric output.
 function normalizeId(id: ApplicantProfile['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Normalizes applicant profile row before returning upstream.
 function toProfile(row: ApplicantProfile): ApplicantProfile {
   return {
     ...row,
@@ -34,6 +36,7 @@ function toProfile(row: ApplicantProfile): ApplicantProfile {
   };
 }
 
+// Fetches profile linked to one auth user account.
 export async function findByUserId(userId: number): Promise<ApplicantProfile | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & ApplicantProfile[]>(
@@ -61,6 +64,7 @@ export async function findByUserIdForUpdate(
   return toProfile(rows[0]);
 }
 
+// Creates initial applicant profile for first-time applicant.
 export async function insertProfile(
   conn: PoolConnection,
   userId: number,
@@ -94,6 +98,7 @@ export async function insertProfile(
   return result.insertId;
 }
 
+// Updates existing applicant profile fields by user id.
 export async function updateProfile(
   conn: PoolConnection,
   userId: number,

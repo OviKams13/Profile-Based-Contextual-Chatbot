@@ -4,6 +4,7 @@ import { AppError } from '../helpers/AppError';
 import * as ApplicantService from '../services/ApplicantService';
 import { updateApplicantProfileSchema } from '../validations/applicantValidation';
 
+// Returns current applicant profile tied to authenticated applicant account.
 export async function getProfile(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -16,6 +17,7 @@ export async function getProfile(req: Request, res: Response, next: NextFunction
   }
 }
 
+// Creates or updates applicant profile used for application submissions.
 export async function updateProfile(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

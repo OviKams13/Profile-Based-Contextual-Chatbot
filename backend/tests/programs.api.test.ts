@@ -29,6 +29,7 @@ const programPayload = {
 };
 
 // Verifies public program reads and dean-only write ownership constraints.
+// Verifies public program reads and dean-restricted write operations.
 describe('Programs API', () => {
   let deanToken = '';
   let applicantToken = '';

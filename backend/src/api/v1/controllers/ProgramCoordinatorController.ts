@@ -8,6 +8,7 @@ import {
   updateCoordinatorSchema,
 } from '../validations/programCoordinatorValidation';
 
+// Creates coordinator profile records managed by dean users only.
 export async function create(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -21,6 +22,7 @@ export async function create(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Returns coordinator contact/profile info for program pages.
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     const { params } = coordinatorIdSchema.parse({ params: req.params });
@@ -31,6 +33,7 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Updates coordinator profile without any login/auth account semantics.
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

@@ -5,7 +5,7 @@ dotenv.config();
 
 let pool: Pool | null = null;
 
-// Lazily initializes and reuses a shared MySQL connection pool.
+// Initializes and reuses a shared MySQL connection pool.
 export function getPool(): Pool {
   if (pool) return pool;
 

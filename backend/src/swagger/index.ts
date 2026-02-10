@@ -143,6 +143,101 @@ const swaggerDefinition = {
           },
         },
       },
+      AdminApplicationListItem: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          status: { type: 'string', enum: ['submitted', 'accepted', 'rejected'], example: 'submitted' },
+          created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+          reviewed_at: { type: 'string', nullable: true, example: null },
+          reviewed_by: { type: 'number', nullable: true, example: null },
+          program: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: 'Software Engineering' },
+              level: { type: 'string', enum: ['undergraduate', 'postgraduate'], example: 'undergraduate' },
+            },
+          },
+          applicant: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 20 },
+              first_name: { type: 'string', example: 'Zeka' },
+              last_name: { type: 'string', example: 'Shadrac' },
+              reference_code: { type: 'string', nullable: true, example: 'APP-ABC123' },
+            },
+          },
+        },
+      },
+      AdminApplicationListResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/AdminApplicationListItem' },
+              },
+              page: { type: 'number', example: 1 },
+              limit: { type: 'number', example: 10 },
+              total: { type: 'number', example: 42 },
+            },
+          },
+        },
+      },
+      AdminApplicationDetailResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              application: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  status: { type: 'string', enum: ['submitted', 'accepted', 'rejected'], example: 'submitted' },
+                  created_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+                  reviewed_at: { type: 'string', nullable: true, example: null },
+                  reviewed_by: { type: 'number', nullable: true, example: null },
+                  program: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number', example: 1 },
+                      name: { type: 'string', example: 'Software Engineering' },
+                      level: { type: 'string', enum: ['undergraduate', 'postgraduate'], example: 'undergraduate' },
+                    },
+                  },
+                  applicant_profile: { $ref: '#/components/schemas/ApplicantProfile' },
+                },
+              },
+            },
+          },
+        },
+      },
+      AdminApplicationReviewResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          data: {
+            type: 'object',
+            properties: {
+              application: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  status: { type: 'string', enum: ['accepted', 'rejected'], example: 'accepted' },
+                  reviewed_by: { type: 'number', example: 10 },
+                  reviewed_at: { type: 'string', example: '2025-01-01T00:00:00.000Z' },
+                },
+              },
+            },
+          },
+        },
+      },
       Course: {
         type: 'object',
         properties: {
@@ -613,6 +708,234 @@ const swaggerDefinition = {
           },
           404: {
             description: 'Profile not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/admin/applications': {
+      get: {
+        tags: ['AdminApplications'],
+        summary: 'List applications for review',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'page',
+            in: 'query',
+            schema: { type: 'number', example: 1 },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            schema: { type: 'number', example: 10 },
+          },
+          {
+            name: 'status',
+            in: 'query',
+            schema: { type: 'string', enum: ['submitted', 'accepted', 'rejected'] },
+          },
+          {
+            name: 'program_id',
+            in: 'query',
+            schema: { type: 'number', example: 1 },
+          },
+          {
+            name: 'search',
+            in: 'query',
+            schema: { type: 'string', example: 'Zeka' },
+          },
+          {
+            name: 'sort',
+            in: 'query',
+            schema: { type: 'string', enum: ['created_at_desc', 'created_at_asc'] },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Applications list',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AdminApplicationListResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/admin/applications/{id}': {
+      get: {
+        tags: ['AdminApplications'],
+        summary: 'Get application detail for review',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Application detail',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AdminApplicationDetailResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/admin/applications/{id}/accept': {
+      patch: {
+        tags: ['AdminApplications'],
+        summary: 'Accept application',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Application accepted',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AdminApplicationReviewResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          409: {
+            description: 'Already reviewed',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/v1/admin/applications/{id}/reject': {
+      patch: {
+        tags: ['AdminApplications'],
+        summary: 'Reject application',
+        security: [{ BearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'number' },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Application rejected',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AdminApplicationReviewResponse' },
+              },
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          403: {
+            description: 'Forbidden',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          404: {
+            description: 'Not found',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorResponse' },
+              },
+            },
+          },
+          409: {
+            description: 'Already reviewed',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },

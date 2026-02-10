@@ -6,6 +6,7 @@ import programCourseRoutes from './programCourseRoutes';
 import programCoordinatorRoutes from './programCoordinatorRoutes';
 import applicantRoutes from './applicantRoutes';
 import applicationRoutes from './applicationRoutes';
+import adminApplicationRoutes from './adminApplicationRoutes';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/courses', courseRoutes);
 router.use('/program-coordinators', programCoordinatorRoutes);
 router.use('/applicant', applicantRoutes);
 router.use('/applications', applicationRoutes);
+router.use('/admin/applications', adminApplicationRoutes);
 
 export default router;

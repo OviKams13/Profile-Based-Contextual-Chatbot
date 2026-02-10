@@ -14,6 +14,7 @@ import { findById as findProgramById } from '../models/ProgramModel';
 
 type ApplicantProfilePayload = Omit<ApplicantProfileInput, 'reference_code'>;
 
+// Executes profile upsert and application insert atomically.
 export async function submitApplication(
   userId: number,
   programId: number,
@@ -23,6 +24,7 @@ export async function submitApplication(
   const conn = await pool.getConnection();
 
   try {
+    // Profile upsert + application insert must succeed together to prevent orphan records.
     await conn.beginTransaction();
 
     const program = await findProgramById(programId);
@@ -30,6 +32,7 @@ export async function submitApplication(
       throw new AppError('Program not found', 404, 'PROGRAM_NOT_FOUND');
     }
 
+    // Reuse applicant profile if it exists, otherwise create it during first submission.
     const existingProfile = await findByUserIdForUpdate(conn, userId);
     const reference_code = existingProfile?.reference_code ?? profile.reference_code ?? generateReferenceCode();
 
@@ -73,6 +76,7 @@ export async function submitApplication(
   }
 }
 
+// Lists applications linked to caller applicant profile only.
 export async function listMyApplications(userId: number, page?: number, limit?: number) {
   const profile = await findByUserId(userId);
   if (!profile) {

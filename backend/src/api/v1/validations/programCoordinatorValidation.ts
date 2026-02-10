@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// Coordinator records are profile-only entities; strict validation keeps contact data clean.
 const coordinatorBaseSchema = z
   .object({
     full_name: z

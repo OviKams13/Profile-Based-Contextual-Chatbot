@@ -7,6 +7,7 @@ import { listApplicationsSchema, submitApplicationSchema } from '../validations/
 
 const router = Router();
 
+// Only applicants can submit their own applications and view their own list.
 router.post(
   '/',
   requireAuth,

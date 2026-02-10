@@ -25,10 +25,12 @@ export interface UpdateProgramInput {
   scholarships_text: string;
 }
 
+// Converts bigint ids to numbers for API-safe responses.
 function normalizeId(id: Program['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Normalizes program DB row before returning to services.
 function toProgram(row: Program): Program {
   return {
     ...row,
@@ -41,6 +43,7 @@ function toProgram(row: Program): Program {
   };
 }
 
+// Inserts a program record tied to dean creator id.
 export async function createProgram(input: CreateProgramInput): Promise<number> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -62,6 +65,7 @@ export async function createProgram(input: CreateProgramInput): Promise<number> 
   return result.insertId;
 }
 
+// Fetches one program for detail or ownership validations.
 export async function findById(id: number): Promise<Program | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & Program[]>(
@@ -74,6 +78,7 @@ export async function findById(id: number): Promise<Program | null> {
   return toProgram(rows[0]);
 }
 
+// Updates editable program descriptive and academic fields.
 export async function updateProgram(id: number, input: UpdateProgramInput): Promise<boolean> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -95,6 +100,7 @@ export async function updateProgram(id: number, input: UpdateProgramInput): Prom
   return result.affectedRows > 0;
 }
 
+// Stores coordinator assignment relationship for a program.
 export async function updateProgramCoordinator(
   id: number,
   coordinatorId: number | null,
@@ -107,7 +113,9 @@ export async function updateProgramCoordinator(
   return result.affectedRows > 0;
 }
 
+// Builds dynamic WHERE filters for public program listing.
 function buildFilters(query: ProgramListQuery) {
+  // Public catalog supports optional level and name search filters.
   const whereClauses: string[] = [];
   const params: Array<string | number> = [];
 
@@ -125,6 +133,7 @@ function buildFilters(query: ProgramListQuery) {
   return { whereSql, params };
 }
 
+// Returns paginated program list with total count metadata.
 export async function listPrograms(query: ProgramListQuery, page: number, limit: number) {
   const pool = getPool();
   const { whereSql, params } = buildFilters(query);

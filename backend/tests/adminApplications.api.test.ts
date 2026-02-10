@@ -47,6 +47,8 @@ const profilePayload = {
   heard_about_university: 'Instagram',
 };
 
+// Covers dean inbox permissions, filtering, detail loading, and one-way review decisions.
+// Verifies dean review inbox access and one-way accept/reject decision rules.
 describe('Admin Applications API', () => {
   let applicantToken = '';
   let deanToken = '';

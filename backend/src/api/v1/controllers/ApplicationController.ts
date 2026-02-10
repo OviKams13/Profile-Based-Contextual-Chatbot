@@ -4,6 +4,7 @@ import { AppError } from '../helpers/AppError';
 import * as ApplicationService from '../services/ApplicationService';
 import { listApplicationsSchema, submitApplicationSchema } from '../validations/applicationValidation';
 
+// Submits an application with applicant profile snapshot in one request.
 export async function submit(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -21,6 +22,7 @@ export async function submit(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Lists only applications belonging to the authenticated applicant.
 export async function myList(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

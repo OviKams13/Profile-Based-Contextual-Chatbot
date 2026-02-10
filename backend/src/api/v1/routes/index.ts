@@ -10,6 +10,7 @@ import adminApplicationRoutes from './adminApplicationRoutes';
 
 const router = Router();
 
+// Keep route groups explicit so feature ownership stays easy to navigate.
 router.use('/auth', authRoutes);
 router.use('/programs/:programId/courses', programCourseRoutes);
 router.use('/programs', programRoutes);

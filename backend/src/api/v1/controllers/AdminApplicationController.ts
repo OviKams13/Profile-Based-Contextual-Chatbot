@@ -7,6 +7,7 @@ import {
   adminApplicationParamsSchema,
 } from '../validations/adminApplicationValidation';
 
+// Shows dean review inbox with optional filters and sorting.
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -29,6 +30,7 @@ export async function list(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Loads full review context for one application decision page.
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -42,6 +44,7 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Marks a submitted application as accepted by current dean reviewer.
 export async function accept(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -55,6 +58,7 @@ export async function accept(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Marks a submitted application as rejected by current dean reviewer.
 export async function reject(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

@@ -10,6 +10,7 @@ import {
   updateCourseSchema,
 } from '../validations/courseValidation';
 
+// Creates a curriculum item under a specific program context.
 export async function createForProgram(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -24,6 +25,7 @@ export async function createForProgram(req: Request, res: Response, next: NextFu
   }
 }
 
+// Lists program courses for catalog pages and applicant review.
 export async function listForProgram(req: Request, res: Response, next: NextFunction) {
   try {
     const { params } = programIdSchema.parse({ params: req.params });
@@ -35,6 +37,7 @@ export async function listForProgram(req: Request, res: Response, next: NextFunc
   }
 }
 
+// Returns full course details including workload and description fields.
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     const { params } = courseIdSchema.parse({ params: req.params });
@@ -45,6 +48,7 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Updates a course while preserving dean ownership restrictions.
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -59,6 +63,7 @@ export async function update(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Deletes a course only when dean owns its parent program.
 export async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

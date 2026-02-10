@@ -40,6 +40,7 @@ const coursePayload = {
   course_description: 'Basics of programming for engineers.',
 };
 
+// Verifies course lifecycle under dean ownership and public read access rules.
 describe('Courses API', () => {
   let deanToken = '';
   let applicantToken = '';

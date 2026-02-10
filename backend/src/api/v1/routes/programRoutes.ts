@@ -8,6 +8,7 @@ import { assignCoordinatorSchema } from '../validations/programCoordinatorValida
 
 const router = Router();
 
+// Program catalog is public, but writes are restricted to dean users below.
 router.get('/', ProgramController.list);
 router.get('/:id', ProgramController.getById);
 router.post(

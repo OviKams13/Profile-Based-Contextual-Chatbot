@@ -14,22 +14,26 @@ import {
 } from '../models/CourseModel';
 import { findById as findProgramById } from '../models/ProgramModel';
 
+// Normalizes numeric ids for cross-table ownership comparisons.
 function normalizeProgramId(id: Program['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Courses inherit ownership from their parent program to keep governance consistent.
 function ensureOwnership(program: Program, deanId: number) {
   if (normalizeProgramId(program.created_by) !== deanId) {
     throw new AppError('Forbidden', 403, 'FORBIDDEN');
   }
 }
 
+// A course cannot be attached outside the declared program duration timeline.
 function ensureYearWithinDuration(year: number, durationYears: number) {
   if (year < 1 || year > durationYears) {
     throw new AppError('Year number exceeds program duration', 400, 'INVALID_YEAR_NUMBER');
   }
 }
 
+// Creates course after ownership, year, and uniqueness checks.
 export async function createForProgram(
   programId: number,
   dto: Omit<CreateCourseInput, 'program_id'>,
@@ -67,6 +71,7 @@ export async function createForProgram(
   return course;
 }
 
+// Loads courses for one program with optional filtering options.
 export async function listForProgram(programId: number, filters: ListCourseFilters) {
   const program = await findProgramById(programId);
   if (!program) {
@@ -80,6 +85,7 @@ export async function listForProgram(programId: number, filters: ListCourseFilte
   };
 }
 
+// Loads single course for detail pages and edit forms.
 export async function getById(courseId: number) {
   const course = await findById(courseId);
   if (!course) {
@@ -88,6 +94,7 @@ export async function getById(courseId: number) {
   return course;
 }
 
+// Applies guarded course updates and re-checks code uniqueness.
 export async function update(courseId: number, dto: UpdateCourseInput, deanId: number) {
   const course = await findById(courseId);
   if (!course) {
@@ -127,6 +134,7 @@ export async function update(courseId: number, dto: UpdateCourseInput, deanId: n
   return refreshed;
 }
 
+// Deletes course only after validating owner dean authorization.
 export async function remove(courseId: number, deanId: number) {
   const course = await findById(courseId);
   if (!course) {

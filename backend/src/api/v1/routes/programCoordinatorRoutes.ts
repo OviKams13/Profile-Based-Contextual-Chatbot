@@ -10,6 +10,7 @@ import {
 
 const router = Router();
 
+// Coordinator profiles are readable publicly; dean role is required for mutations.
 router.get('/:id', ProgramCoordinatorController.getById);
 router.post(
   '/',

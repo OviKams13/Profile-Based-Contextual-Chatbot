@@ -29,6 +29,7 @@ const profilePayload = {
   heard_about_university: 'Instagram',
 };
 
+// Verifies applicant profile endpoint protections and upsert behavior end-to-end.
 describe('Applicant Profile API', () => {
   let applicantToken = '';
 

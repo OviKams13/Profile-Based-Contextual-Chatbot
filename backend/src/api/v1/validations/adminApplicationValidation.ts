@@ -3,6 +3,7 @@ import { z } from 'zod';
 const statusEnum = z.enum(['submitted', 'accepted', 'rejected']);
 const sortEnum = z.enum(['created_at_desc', 'created_at_asc']);
 
+// Dean inbox accepts only explicit filters to avoid unexpected query behavior.
 export const adminApplicationListSchema = z.object({
   query: z
     .object({

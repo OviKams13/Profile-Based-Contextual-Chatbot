@@ -1,5 +1,6 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
+// Swagger is the contract source for frontend/Postman integration in UniApply.
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { AuthPayload } from '../../../types/AuthPayload';
 
+// Centralized secret loader ensures sign/verify always use the same configured key.
 function getJwtSecret(): string {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
@@ -9,12 +10,14 @@ function getJwtSecret(): string {
   return secret;
 }
 
+// Signs auth payload used by protected endpoints authorization.
 export function signToken(payload: AuthPayload): string {
   const secret = getJwtSecret();
   const expiresIn = process.env.JWT_EXPIRES_IN ?? '1d';
   return jwt.sign(payload, secret, { expiresIn });
 }
 
+// Verifies and decodes incoming bearer JWT tokens.
 export function verifyToken(token: string): AuthPayload {
   const secret = getJwtSecret();
   return jwt.verify(token, secret) as AuthPayload;

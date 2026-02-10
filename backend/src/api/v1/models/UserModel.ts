@@ -10,6 +10,7 @@ export interface CreateUserInput {
   role: 'dean' | 'applicant';
 }
 
+// Looks up credentials owner by unique email identifier.
 export async function findByEmail(email: string): Promise<User | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & User[]>(
@@ -19,6 +20,7 @@ export async function findByEmail(email: string): Promise<User | null> {
   return rows.length ? rows[0] : null;
 }
 
+// Loads user row by primary key for auth/me responses.
 export async function findById(id: number): Promise<User | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & User[]>(
@@ -28,6 +30,7 @@ export async function findById(id: number): Promise<User | null> {
   return rows.length ? rows[0] : null;
 }
 
+// Inserts a new auth account record in users table.
 export async function createUser(input: CreateUserInput): Promise<number> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(

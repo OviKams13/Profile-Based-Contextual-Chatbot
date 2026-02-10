@@ -5,6 +5,7 @@ dotenv.config();
 
 let pool: Pool | null = null;
 
+// Lazily initializes and reuses a shared MySQL connection pool.
 export function getPool(): Pool {
   if (pool) return pool;
 
@@ -35,6 +36,7 @@ export function getPool(): Pool {
   return pool;
 }
 
+// Probes DB connectivity during startup health validation.
 export async function testDbConnection(): Promise<void> {
   const p = getPool();
   const conn = await p.getConnection();

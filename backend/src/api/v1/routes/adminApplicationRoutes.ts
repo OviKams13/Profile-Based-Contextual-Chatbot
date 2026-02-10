@@ -10,6 +10,7 @@ import {
 
 const router = Router();
 
+// Review endpoints are dean-only to enforce admissions governance.
 router.get(
   '/',
   requireAuth,

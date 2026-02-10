@@ -2,12 +2,14 @@ import { NextFunction, Request, Response } from 'express';
 import { verifyToken } from '../helpers/jwt';
 import { AppError } from '../helpers/AppError';
 
+// Validates bearer token and attaches authenticated user payload.
 export function requireAuth(req: Request, _res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return next(new AppError('Authorization header missing', 401, 'UNAUTHORIZED'));
   }
 
+  // API contract is strict Bearer token format to avoid ambiguous auth parsing.
   const [scheme, token] = authHeader.split(' ');
   if (scheme !== 'Bearer' || !token) {
     return next(new AppError('Invalid authorization format', 401, 'UNAUTHORIZED'));

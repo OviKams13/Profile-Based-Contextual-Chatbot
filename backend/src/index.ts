@@ -15,6 +15,7 @@ export const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Health check verifies API process and DB connectivity for quick ops diagnostics.
 app.get('/health', async (req, res) => {
   try {
     //check DB
@@ -27,14 +28,17 @@ app.get('/health', async (req, res) => {
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// All product features are versioned under /api/v1 to keep future breaking changes isolated.
 app.use('/api/v1', v1Router);
 app.use(notFound);
 app.use(errorHandler);
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 
+// Bootstraps server only after successful database connectivity check.
 async function start() {
   try {
+    // Fail fast on boot if MySQL is unavailable so we do not serve partial functionality.
     await testDbConnection();
     console.log('MySQL connected');
     app.listen(port, () => {

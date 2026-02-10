@@ -22,10 +22,12 @@ export interface LoginDto {
   password: string;
 }
 
+// Normalizes bigint database ids for stable JSON responses.
 function normalizeUserId(id: User['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Never leak password_hash outside the auth boundary.
 function toPublicUser(user: User): PublicUser {
   const { password_hash: _password, ...rest } = user;
   return {
@@ -34,6 +36,7 @@ function toPublicUser(user: User): PublicUser {
   };
 }
 
+// Creates user credentials and immediately returns auth token.
 export async function register(dto: RegisterDto) {
   const existing = await findByEmail(dto.email);
   if (existing) {
@@ -64,6 +67,7 @@ export async function register(dto: RegisterDto) {
   return { user: toPublicUser(user), token };
 }
 
+// Validates credentials and returns fresh auth token on success.
 export async function login(dto: LoginDto) {
   const user = await findByEmail(dto.email);
   if (!user) {
@@ -84,6 +88,7 @@ export async function login(dto: LoginDto) {
   return { user: toPublicUser(user), token };
 }
 
+// Fetches canonical user record for authenticated identity endpoint.
 export async function getMe(userId: number) {
   const user = await findById(userId);
   if (!user) {

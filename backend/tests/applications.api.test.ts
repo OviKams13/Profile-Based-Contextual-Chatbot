@@ -47,6 +47,8 @@ const profilePayload = {
   heard_about_university: 'Instagram',
 };
 
+// Ensures applicant submission flow and personal application listing stay protected by role.
+// Verifies applicant-only submission flow and personal applications listing behavior.
 describe('Applications API', () => {
   let applicantToken = '';
   let deanToken = '';

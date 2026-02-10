@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { applicantProfileSchema } from './applicantValidation';
 
+// Application submit requires both target program and full applicant profile snapshot.
 export const submitApplicationSchema = z.object({
   body: z
     .object({

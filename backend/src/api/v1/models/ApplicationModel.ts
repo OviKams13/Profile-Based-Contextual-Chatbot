@@ -9,10 +9,12 @@ export interface CreateApplicationInput {
   status?: 'submitted' | 'accepted' | 'rejected';
 }
 
+// Normalizes application-related ids from DB bigint values.
 function normalizeId(id: Application['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Normalizes application row including nullable reviewer id.
 function toApplication(row: Application): Application {
   return {
     ...row,
@@ -23,10 +25,12 @@ function toApplication(row: Application): Application {
   };
 }
 
+// Inserts submitted application plus submitter audit user id.
 export async function createApplication(
   conn: PoolConnection,
   input: CreateApplicationInput,
 ): Promise<number> {
+  // created_by records who submitted the application even if applicant and profile ids differ.
   const [result] = await conn.query<ResultSetHeader>(
     'INSERT INTO applications (applicant_id, program_id, created_by, status) VALUES (?, ?, ?, ?)',
     [input.applicant_id, input.program_id, input.created_by, input.status ?? 'submitted'],
@@ -34,6 +38,7 @@ export async function createApplication(
   return result.insertId;
 }
 
+// Fetches one application after creation or review actions.
 export async function findById(id: number): Promise<Application | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & Application[]>(
@@ -46,6 +51,7 @@ export async function findById(id: number): Promise<Application | null> {
   return toApplication(rows[0]);
 }
 
+// Returns paginated applications belonging to one applicant.
 export async function listByApplicantId(
   applicantId: number,
   page: number,

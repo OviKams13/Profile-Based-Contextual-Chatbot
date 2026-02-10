@@ -13,10 +13,12 @@ import {
 import { ProgramListQuery } from '../types/Pagination';
 import { findById as findCoordinatorById } from '../models/ProgramCoordinatorModel';
 
+// Normalizes DB numeric id types for ownership checks.
 function normalizeProgramId(id: Program['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Persists program with dean id as immutable creator reference.
 export async function createProgramForDean(dto: Omit<CreateProgramInput, 'created_by'>, deanId: number) {
   const programId = await createProgram({
     ...dto,
@@ -29,6 +31,7 @@ export async function createProgramForDean(dto: Omit<CreateProgramInput, 'create
   return program;
 }
 
+// Builds paginated public listing response for program catalog.
 export async function listProgramsForPublic(query: ProgramListQuery) {
   const { page, limit } = getPagination(query.page, query.limit);
   const result = await listPrograms(query, page, limit);
@@ -40,6 +43,7 @@ export async function listProgramsForPublic(query: ProgramListQuery) {
   };
 }
 
+// Loads one program or raises a not-found business error.
 export async function getProgramById(id: number) {
   const program = await findById(id);
   if (!program) {
@@ -48,6 +52,7 @@ export async function getProgramById(id: number) {
   return program;
 }
 
+// Enforces creator ownership before updating program content.
 export async function updateProgramForDean(
   id: number,
   dto: UpdateProgramInput,
@@ -58,6 +63,7 @@ export async function updateProgramForDean(
     throw new AppError('Program not found', 404, 'PROGRAM_NOT_FOUND');
   }
 
+  // Only the dean who created the program can edit or assign its coordinator.
   if (normalizeProgramId(program.created_by) !== deanId) {
     throw new AppError('Forbidden', 403, 'FORBIDDEN');
   }
@@ -75,6 +81,7 @@ export async function updateProgramForDean(
   return refreshed;
 }
 
+// Enforces dean ownership and coordinator existence before assignment.
 export async function assignCoordinator(
   programId: number,
   coordinatorId: number | null,

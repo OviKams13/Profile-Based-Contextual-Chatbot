@@ -33,10 +33,12 @@ export interface ListCourseFilters {
   sort?: 'year' | 'name';
 }
 
+// Converts bigint ids to standard numbers for API output.
 function normalizeId(id: Course['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Normalizes a course row into response-safe structure.
 function toCourse(row: Course): Course {
   return {
     ...row,
@@ -49,6 +51,7 @@ function toCourse(row: Course): Course {
   };
 }
 
+// Inserts a course under program and dean ownership scope.
 export async function createCourse(input: CreateCourseInput): Promise<number> {
   const pool = getPool();
   if (input.created_by !== undefined) {
@@ -99,6 +102,7 @@ export async function createCourse(input: CreateCourseInput): Promise<number> {
   return result.insertId;
 }
 
+// Fetches one course for read/update/delete workflows.
 export async function findById(id: number): Promise<Course | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & Course[]>(
@@ -111,6 +115,7 @@ export async function findById(id: number): Promise<Course | null> {
   return toCourse(rows[0]);
 }
 
+// Checks per-program course code uniqueness constraint.
 export async function findByProgramAndCode(
   programId: number,
   courseCode: string,
@@ -126,8 +131,10 @@ export async function findByProgramAndCode(
   return toCourse(rows[0]);
 }
 
+// Returns program-scoped course list with optional filters.
 export async function listByProgram(programId: number, filters: ListCourseFilters) {
   const pool = getPool();
+  // Course list can be filtered by year while remaining scoped to one program.
   const whereClauses: string[] = ['program_id = ?'];
   const params: Array<string | number> = [programId];
 
@@ -148,6 +155,7 @@ export async function listByProgram(programId: number, filters: ListCourseFilter
   return rows.map((row) => toCourse(row));
 }
 
+// Persists course changes for an existing course id.
 export async function updateCourse(id: number, input: UpdateCourseInput): Promise<boolean> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -171,6 +179,7 @@ export async function updateCourse(id: number, input: UpdateCourseInput): Promis
   return result.affectedRows > 0;
 }
 
+// Removes course row when ownership checks already passed.
 export async function deleteCourse(id: number): Promise<boolean> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>('DELETE FROM courses WHERE id = ?', [id]);

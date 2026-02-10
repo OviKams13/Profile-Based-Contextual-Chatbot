@@ -3,12 +3,14 @@ import { ZodError } from 'zod';
 import { AppError } from '../helpers/AppError';
 import { fail } from '../helpers/response';
 
+// Transforms validation/business/system errors into API error contract.
 export function errorHandler(
   err: unknown,
   _req: Request,
   res: Response,
   _next: NextFunction,
 ): Response {
+  // Validation errors are normalized so frontend can map field-level messages consistently.
   if (err instanceof ZodError) {
     const details = err.issues.map((issue) => ({
       path: issue.path.join('.'),

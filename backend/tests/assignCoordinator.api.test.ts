@@ -32,6 +32,7 @@ const coordinatorPayload = {
   office_hours: 'Mon-Fri 10:00-12:00',
 };
 
+// Verifies coordinator assignment endpoint authorization and validation scenarios.
 describe('Assign Coordinator API', () => {
   let deanToken = '';
   let programId: number;

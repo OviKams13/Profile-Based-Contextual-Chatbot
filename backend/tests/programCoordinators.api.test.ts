@@ -30,6 +30,7 @@ const coordinatorPayload = {
   office_hours: 'Mon-Fri 10:00-12:00',
 };
 
+// Verifies coordinator CRUD authorization and uniqueness constraints through API.
 describe('Program Coordinators API', () => {
   let deanToken = '';
   let applicantToken = '';

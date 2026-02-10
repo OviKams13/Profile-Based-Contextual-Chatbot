@@ -4,6 +4,7 @@ export interface PaginationResult {
   offset: number;
 }
 
+// Normalize pagination to prevent negative offsets and inconsistent page behavior.
 export function getPagination(page?: number, limit?: number): PaginationResult {
   const normalizedPage = page && page > 0 ? Math.floor(page) : 1;
   const normalizedLimit = limit && limit > 0 ? Math.floor(limit) : 10;

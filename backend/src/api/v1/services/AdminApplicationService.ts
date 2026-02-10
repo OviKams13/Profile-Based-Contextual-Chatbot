@@ -8,6 +8,7 @@ import {
   updateStatusReviewed,
 } from '../models/AdminApplicationModel';
 
+// Provides dean inbox with pagination metadata.
 export async function listAdminApplications(
   filters: AdminApplicationListFilters,
   page?: number,
@@ -24,6 +25,7 @@ export async function listAdminApplications(
   };
 }
 
+// Loads review detail and fails fast when missing.
 export async function getAdminApplicationDetail(id: number) {
   const application = await findApplicationDetailById(id);
   if (!application) {
@@ -32,11 +34,13 @@ export async function getAdminApplicationDetail(id: number) {
   return application;
 }
 
+// Centralizes review transition rules and conflict protection.
 async function reviewApplication(id: number, deanUserId: number, status: 'accepted' | 'rejected') {
   const existing = await findApplicationStatusById(id);
   if (!existing) {
     throw new AppError('Application not found', 404, 'APPLICATION_NOT_FOUND');
   }
+  // Dean can review only once; accepted/rejected states are final audit outcomes.
   if (existing.status !== 'submitted') {
     throw new AppError('Application already reviewed', 409, 'APPLICATION_ALREADY_REVIEWED');
   }
@@ -48,10 +52,12 @@ async function reviewApplication(id: number, deanUserId: number, status: 'accept
   return updated;
 }
 
+// Applies accepted decision through shared review guardrails.
 export async function acceptApplication(id: number, deanUserId: number) {
   return reviewApplication(id, deanUserId, 'accepted');
 }
 
+// Applies rejected decision through shared review guardrails.
 export async function rejectApplication(id: number, deanUserId: number) {
   return reviewApplication(id, deanUserId, 'rejected');
 }

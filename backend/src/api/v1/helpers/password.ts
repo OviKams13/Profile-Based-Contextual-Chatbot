@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 
+// Salt rounds remain configurable, with a safe default for local development.
 function getSaltRounds(): number {
   const rounds = process.env.BCRYPT_SALT_ROUNDS
     ? Number(process.env.BCRYPT_SALT_ROUNDS)

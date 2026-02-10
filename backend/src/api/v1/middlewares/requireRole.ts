@@ -7,6 +7,7 @@ export function requireRole(role: 'dean' | 'applicant') {
       return next(new AppError('Unauthorized', 401, 'UNAUTHORIZED'));
     }
 
+    // Role gate protects dean-only administration and applicant-only personal flows.
     if (req.user.role !== role) {
       return next(new AppError('Forbidden', 403, 'FORBIDDEN'));
     }

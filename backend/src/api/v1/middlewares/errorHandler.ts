@@ -9,6 +9,7 @@ export function errorHandler(
   res: Response,
   _next: NextFunction,
 ): Response {
+  // Validation errors are normalized so frontend can map field-level messages consistently.
   if (err instanceof ZodError) {
     const details = err.issues.map((issue) => ({
       path: issue.path.join('.'),

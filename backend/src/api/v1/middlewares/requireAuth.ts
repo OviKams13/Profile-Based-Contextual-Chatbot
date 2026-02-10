@@ -8,6 +8,7 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction): v
     return next(new AppError('Authorization header missing', 401, 'UNAUTHORIZED'));
   }
 
+  // API contract is strict Bearer token format to avoid ambiguous auth parsing.
   const [scheme, token] = authHeader.split(' ');
   if (scheme !== 'Bearer' || !token) {
     return next(new AppError('Invalid authorization format', 401, 'UNAUTHORIZED'));

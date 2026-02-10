@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { AuthPayload } from '../../../types/AuthPayload';
 
+// Centralized secret loader ensures sign/verify always use the same configured key.
 function getJwtSecret(): string {
   const secret = process.env.JWT_SECRET;
   if (!secret) {

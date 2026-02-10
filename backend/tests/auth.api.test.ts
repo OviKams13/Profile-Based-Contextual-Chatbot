@@ -10,6 +10,7 @@ const testUser = {
   role: 'applicant' as const,
 };
 
+// Confirms registration/login token flow and protected /me identity lookup.
 describe('Auth API', () => {
   beforeAll(async () => {
     const pool = getPool();

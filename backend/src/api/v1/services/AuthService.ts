@@ -26,6 +26,7 @@ function normalizeUserId(id: User['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+// Never leak password_hash outside the auth boundary.
 function toPublicUser(user: User): PublicUser {
   const { password_hash: _password, ...rest } = user;
   return {

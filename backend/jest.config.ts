@@ -1,3 +1,6 @@
+/**
+ * Backend module for the UniApply API.
+ */
 import type { Config } from 'jest';
 
 const config: Config = {

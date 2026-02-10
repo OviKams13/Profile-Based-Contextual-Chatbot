@@ -1,3 +1,6 @@
+/**
+ * Shared TypeScript contracts used across API modules.
+ */
 export interface ApplicantProfile {
   id: number | bigint;
   user_id: number | bigint;

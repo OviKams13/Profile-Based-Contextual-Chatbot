@@ -1,3 +1,6 @@
+/**
+ * Zod schemas used to validate incoming API payloads and query parameters.
+ */
 import { z } from 'zod';
 
 const statusEnum = z.enum(['submitted', 'accepted', 'rejected']);

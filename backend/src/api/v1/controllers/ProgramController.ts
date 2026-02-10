@@ -1,3 +1,6 @@
+/**
+ * HTTP controller handlers for request orchestration and response shaping.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ok } from '../helpers/response';
 import * as ProgramService from '../services/ProgramService';
@@ -8,6 +11,9 @@ import {
 import { AppError } from '../helpers/AppError';
 import { assignCoordinatorSchema } from '../validations/programCoordinatorValidation';
 
+/**
+ * create service/controller utility.
+ */
 export async function create(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -20,6 +26,9 @@ export async function create(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * list service/controller utility.
+ */
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
     const parsed = listProgramsSchema.parse({ query: req.query });
@@ -30,6 +39,9 @@ export async function list(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * getById service/controller utility.
+ */
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     const parsed = programIdSchema.parse({ params: req.params });
@@ -40,6 +52,9 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * update service/controller utility.
+ */
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -57,6 +72,9 @@ export async function update(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * assignCoordinator service/controller utility.
+ */
 export async function assignCoordinator(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

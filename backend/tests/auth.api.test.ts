@@ -1,3 +1,6 @@
+/**
+ * Integration tests validating API behavior and permission boundaries.
+ */
 import request from 'supertest';
 import { app } from '../src/index';
 import { getPool } from '../src/config/DatabaseConfig';

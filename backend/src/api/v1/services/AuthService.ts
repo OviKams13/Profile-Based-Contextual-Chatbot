@@ -1,3 +1,6 @@
+/**
+ * Service layer for business rules, authorization checks, and orchestration.
+ */
 import { AppError } from '../helpers/AppError';
 import { comparePassword, hashPassword } from '../helpers/password';
 import { signToken } from '../helpers/jwt';
@@ -34,6 +37,9 @@ function toPublicUser(user: User): PublicUser {
   };
 }
 
+/**
+ * register service/controller utility.
+ */
 export async function register(dto: RegisterDto) {
   const existing = await findByEmail(dto.email);
   if (existing) {
@@ -64,6 +70,9 @@ export async function register(dto: RegisterDto) {
   return { user: toPublicUser(user), token };
 }
 
+/**
+ * login service/controller utility.
+ */
 export async function login(dto: LoginDto) {
   const user = await findByEmail(dto.email);
   if (!user) {
@@ -84,6 +93,9 @@ export async function login(dto: LoginDto) {
   return { user: toPublicUser(user), token };
 }
 
+/**
+ * getMe service/controller utility.
+ */
 export async function getMe(userId: number) {
   const user = await findById(userId);
   if (!user) {

@@ -1,3 +1,6 @@
+/**
+ * Shared TypeScript contracts used across API modules.
+ */
 export interface ProgramCoordinator {
   id: number | bigint;
   full_name: string;

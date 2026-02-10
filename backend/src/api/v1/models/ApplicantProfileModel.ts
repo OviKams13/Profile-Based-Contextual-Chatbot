@@ -1,3 +1,6 @@
+/**
+ * Data-access functions that execute SQL queries against MySQL tables.
+ */
 import { PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { getPool } from '../../../config/DatabaseConfig';
 import { ApplicantProfile } from '../interfaces/ApplicantProfile';
@@ -34,6 +37,9 @@ function toProfile(row: ApplicantProfile): ApplicantProfile {
   };
 }
 
+/**
+ * findByUserId service/controller utility.
+ */
 export async function findByUserId(userId: number): Promise<ApplicantProfile | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & ApplicantProfile[]>(
@@ -46,6 +52,9 @@ export async function findByUserId(userId: number): Promise<ApplicantProfile | n
   return toProfile(rows[0]);
 }
 
+/**
+ * findByUserIdForUpdate service/controller utility.
+ */
 export async function findByUserIdForUpdate(
   conn: PoolConnection,
   userId: number,
@@ -60,6 +69,9 @@ export async function findByUserIdForUpdate(
   return toProfile(rows[0]);
 }
 
+/**
+ * insertProfile service/controller utility.
+ */
 export async function insertProfile(
   conn: PoolConnection,
   userId: number,
@@ -93,6 +105,9 @@ export async function insertProfile(
   return result.insertId;
 }
 
+/**
+ * updateProfile service/controller utility.
+ */
 export async function updateProfile(
   conn: PoolConnection,
   userId: number,

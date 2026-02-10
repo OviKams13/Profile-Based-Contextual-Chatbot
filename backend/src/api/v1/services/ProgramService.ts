@@ -1,3 +1,6 @@
+/**
+ * Service layer for business rules, authorization checks, and orchestration.
+ */
 import { AppError } from '../helpers/AppError';
 import { getPagination } from '../helpers/pagination';
 import { Program } from '../interfaces/Program';
@@ -17,6 +20,9 @@ function normalizeProgramId(id: Program['id']): number {
   return typeof id === 'bigint' ? Number(id) : Number(id);
 }
 
+/**
+ * createProgramForDean service/controller utility.
+ */
 export async function createProgramForDean(dto: Omit<CreateProgramInput, 'created_by'>, deanId: number) {
   const programId = await createProgram({
     ...dto,
@@ -29,6 +35,9 @@ export async function createProgramForDean(dto: Omit<CreateProgramInput, 'create
   return program;
 }
 
+/**
+ * listProgramsForPublic service/controller utility.
+ */
 export async function listProgramsForPublic(query: ProgramListQuery) {
   const { page, limit } = getPagination(query.page, query.limit);
   const result = await listPrograms(query, page, limit);
@@ -40,6 +49,9 @@ export async function listProgramsForPublic(query: ProgramListQuery) {
   };
 }
 
+/**
+ * getProgramById service/controller utility.
+ */
 export async function getProgramById(id: number) {
   const program = await findById(id);
   if (!program) {
@@ -48,6 +60,9 @@ export async function getProgramById(id: number) {
   return program;
 }
 
+/**
+ * updateProgramForDean service/controller utility.
+ */
 export async function updateProgramForDean(
   id: number,
   dto: UpdateProgramInput,
@@ -75,6 +90,9 @@ export async function updateProgramForDean(
   return refreshed;
 }
 
+/**
+ * assignCoordinator service/controller utility.
+ */
 export async function assignCoordinator(
   programId: number,
   coordinatorId: number | null,

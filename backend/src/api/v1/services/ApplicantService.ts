@@ -1,3 +1,6 @@
+/**
+ * Service layer for business rules, authorization checks, and orchestration.
+ */
 import { AppError } from '../helpers/AppError';
 import { generateReferenceCode } from '../helpers/referenceCode';
 import {
@@ -9,6 +12,9 @@ import {
 } from '../models/ApplicantProfileModel';
 import { getPool } from '../../../config/DatabaseConfig';
 
+/**
+ * getProfile service/controller utility.
+ */
 export async function getProfile(userId: number) {
   const profile = await findByUserId(userId);
   if (!profile) {
@@ -19,6 +25,9 @@ export async function getProfile(userId: number) {
 
 type ApplicantProfilePayload = Omit<ApplicantProfileInput, 'reference_code'>;
 
+/**
+ * upsertProfile service/controller utility.
+ */
 export async function upsertProfile(userId: number, dto: ApplicantProfilePayload) {
   const pool = getPool();
   const conn = await pool.getConnection();

@@ -1,3 +1,6 @@
+/**
+ * Service layer for business rules, authorization checks, and orchestration.
+ */
 import { AppError } from '../helpers/AppError';
 import { getPagination } from '../helpers/pagination';
 import { generateReferenceCode } from '../helpers/referenceCode';
@@ -14,6 +17,12 @@ import { findById as findProgramById } from '../models/ProgramModel';
 
 type ApplicantProfilePayload = Omit<ApplicantProfileInput, 'reference_code'>;
 
+/**
+ * Submits an application for the authenticated applicant.
+ *
+ * The operation is transactional so profile upsert and application creation
+ * are committed atomically.
+ */
 export async function submitApplication(
   userId: number,
   programId: number,
@@ -30,9 +39,11 @@ export async function submitApplication(
       throw new AppError('Program not found', 404, 'PROGRAM_NOT_FOUND');
     }
 
+    // Row-level lock prevents concurrent submissions from creating duplicates.
     const existingProfile = await findByUserIdForUpdate(conn, userId);
     const reference_code = existingProfile?.reference_code ?? profile.reference_code ?? generateReferenceCode();
 
+    // Keep a stable reference code once assigned to an applicant profile.
     if (existingProfile) {
       await updateProfile(conn, userId, {
         ...profile,
@@ -73,6 +84,9 @@ export async function submitApplication(
   }
 }
 
+/**
+ * Lists applications owned by the authenticated applicant with pagination.
+ */
 export async function listMyApplications(userId: number, page?: number, limit?: number) {
   const profile = await findByUserId(userId);
   if (!profile) {

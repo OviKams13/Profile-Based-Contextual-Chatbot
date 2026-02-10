@@ -1,3 +1,6 @@
+/**
+ * Shared TypeScript contracts used across API modules.
+ */
 export interface PaginationQuery {
   page?: number;
   limit?: number;

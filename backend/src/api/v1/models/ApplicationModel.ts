@@ -1,3 +1,6 @@
+/**
+ * Data-access functions that execute SQL queries against MySQL tables.
+ */
 import { PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { getPool } from '../../../config/DatabaseConfig';
 import { Application, ApplicationListItem } from '../interfaces/Application';
@@ -23,6 +26,9 @@ function toApplication(row: Application): Application {
   };
 }
 
+/**
+ * createApplication service/controller utility.
+ */
 export async function createApplication(
   conn: PoolConnection,
   input: CreateApplicationInput,
@@ -34,6 +40,9 @@ export async function createApplication(
   return result.insertId;
 }
 
+/**
+ * findById service/controller utility.
+ */
 export async function findById(id: number): Promise<Application | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & Application[]>(
@@ -46,6 +55,9 @@ export async function findById(id: number): Promise<Application | null> {
   return toApplication(rows[0]);
 }
 
+/**
+ * listByApplicantId service/controller utility.
+ */
 export async function listByApplicantId(
   applicantId: number,
   page: number,

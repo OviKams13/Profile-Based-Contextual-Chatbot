@@ -1,3 +1,6 @@
+/**
+ * HTTP controller handlers for request orchestration and response shaping.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ok } from '../helpers/response';
 import { AppError } from '../helpers/AppError';
@@ -10,6 +13,9 @@ import {
   updateCourseSchema,
 } from '../validations/courseValidation';
 
+/**
+ * createForProgram service/controller utility.
+ */
 export async function createForProgram(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -24,6 +30,9 @@ export async function createForProgram(req: Request, res: Response, next: NextFu
   }
 }
 
+/**
+ * listForProgram service/controller utility.
+ */
 export async function listForProgram(req: Request, res: Response, next: NextFunction) {
   try {
     const { params } = programIdSchema.parse({ params: req.params });
@@ -35,6 +44,9 @@ export async function listForProgram(req: Request, res: Response, next: NextFunc
   }
 }
 
+/**
+ * getById service/controller utility.
+ */
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     const { params } = courseIdSchema.parse({ params: req.params });
@@ -45,6 +57,9 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * update service/controller utility.
+ */
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -59,6 +74,9 @@ export async function update(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * remove service/controller utility.
+ */
 export async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

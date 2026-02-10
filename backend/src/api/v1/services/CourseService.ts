@@ -1,3 +1,6 @@
+/**
+ * Service layer for business rules, authorization checks, and orchestration.
+ */
 import { AppError } from '../helpers/AppError';
 import { normalizeCourseInput } from '../helpers/normalize';
 import { Program } from '../interfaces/Program';
@@ -30,6 +33,9 @@ function ensureYearWithinDuration(year: number, durationYears: number) {
   }
 }
 
+/**
+ * createForProgram service/controller utility.
+ */
 export async function createForProgram(
   programId: number,
   dto: Omit<CreateCourseInput, 'program_id'>,
@@ -67,6 +73,9 @@ export async function createForProgram(
   return course;
 }
 
+/**
+ * listForProgram service/controller utility.
+ */
 export async function listForProgram(programId: number, filters: ListCourseFilters) {
   const program = await findProgramById(programId);
   if (!program) {
@@ -80,6 +89,9 @@ export async function listForProgram(programId: number, filters: ListCourseFilte
   };
 }
 
+/**
+ * getById service/controller utility.
+ */
 export async function getById(courseId: number) {
   const course = await findById(courseId);
   if (!course) {
@@ -88,6 +100,9 @@ export async function getById(courseId: number) {
   return course;
 }
 
+/**
+ * update service/controller utility.
+ */
 export async function update(courseId: number, dto: UpdateCourseInput, deanId: number) {
   const course = await findById(courseId);
   if (!course) {
@@ -127,6 +142,9 @@ export async function update(courseId: number, dto: UpdateCourseInput, deanId: n
   return refreshed;
 }
 
+/**
+ * remove service/controller utility.
+ */
 export async function remove(courseId: number, deanId: number) {
   const course = await findById(courseId);
   if (!course) {

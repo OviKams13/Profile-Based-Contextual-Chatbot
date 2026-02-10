@@ -1,3 +1,6 @@
+/**
+ * OpenAPI schema declaration for interactive API documentation.
+ */
 import swaggerJSDoc from 'swagger-jsdoc';
 
 const swaggerDefinition = {

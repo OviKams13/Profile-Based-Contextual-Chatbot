@@ -1,3 +1,6 @@
+/**
+ * Data-access functions that execute SQL queries against MySQL tables.
+ */
 import { RowDataPacket } from 'mysql2/promise';
 import { getPool } from '../../../config/DatabaseConfig';
 import { AdminApplicationDetail, AdminApplicationListItem, AdminApplicationReview } from '../interfaces/AdminApplication';
@@ -50,6 +53,9 @@ function buildWhereClause(filters: AdminApplicationListFilters) {
   return { clause, params };
 }
 
+/**
+ * listApplications service/controller utility.
+ */
 export async function listApplications(
   filters: AdminApplicationListFilters,
   page: number,
@@ -114,6 +120,9 @@ export async function listApplications(
   return { items, total };
 }
 
+/**
+ * findApplicationDetailById service/controller utility.
+ */
 export async function findApplicationDetailById(id: number): Promise<AdminApplicationDetail | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[]>(
@@ -195,6 +204,9 @@ export async function findApplicationDetailById(id: number): Promise<AdminApplic
   };
 }
 
+/**
+ * findApplicationStatusById service/controller utility.
+ */
 export async function findApplicationStatusById(id: number): Promise<ApplicationStatusRow | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[]>(
@@ -210,6 +222,9 @@ export async function findApplicationStatusById(id: number): Promise<Application
   };
 }
 
+/**
+ * updateStatusReviewed service/controller utility.
+ */
 export async function updateStatusReviewed(
   id: number,
   status: 'accepted' | 'rejected',

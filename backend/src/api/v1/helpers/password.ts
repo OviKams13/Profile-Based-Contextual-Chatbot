@@ -1,3 +1,6 @@
+/**
+ * Shared helper utilities for reusable API behavior and transformations.
+ */
 import bcrypt from 'bcrypt';
 
 function getSaltRounds(): number {
@@ -10,11 +13,17 @@ function getSaltRounds(): number {
   return rounds;
 }
 
+/**
+ * hashPassword service/controller utility.
+ */
 export async function hashPassword(password: string): Promise<string> {
   const saltRounds = getSaltRounds();
   return bcrypt.hash(password, saltRounds);
 }
 
+/**
+ * comparePassword service/controller utility.
+ */
 export async function comparePassword(
   password: string,
   passwordHash: string,

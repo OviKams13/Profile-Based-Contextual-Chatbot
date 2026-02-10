@@ -1,9 +1,15 @@
+/**
+ * HTTP controller handlers for request orchestration and response shaping.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ok } from '../helpers/response';
 import { AppError } from '../helpers/AppError';
 import * as ApplicantService from '../services/ApplicantService';
 import { updateApplicantProfileSchema } from '../validations/applicantValidation';
 
+/**
+ * getProfile service/controller utility.
+ */
 export async function getProfile(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -16,6 +22,9 @@ export async function getProfile(req: Request, res: Response, next: NextFunction
   }
 }
 
+/**
+ * updateProfile service/controller utility.
+ */
 export async function updateProfile(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

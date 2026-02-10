@@ -1,3 +1,6 @@
+/**
+ * Application configuration and infrastructure bootstrap helpers.
+ */
 import { createPool, Pool } from 'mysql2/promise';
 import dotenv from 'dotenv';
 
@@ -5,6 +8,9 @@ dotenv.config();
 
 let pool: Pool | null = null;
 
+/**
+ * getPool service/controller utility.
+ */
 export function getPool(): Pool {
   if (pool) return pool;
 
@@ -35,6 +41,9 @@ export function getPool(): Pool {
   return pool;
 }
 
+/**
+ * testDbConnection service/controller utility.
+ */
 export async function testDbConnection(): Promise<void> {
   const p = getPool();
   const conn = await p.getConnection();

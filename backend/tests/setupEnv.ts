@@ -1,3 +1,6 @@
+/**
+ * Integration tests validating API behavior and permission boundaries.
+ */
 import dotenv from 'dotenv';
 
 dotenv.config();

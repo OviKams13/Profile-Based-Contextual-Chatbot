@@ -1,3 +1,6 @@
+/**
+ * Data-access functions that execute SQL queries against MySQL tables.
+ */
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { getPool } from '../../../config/DatabaseConfig';
 import { Program } from '../interfaces/Program';
@@ -41,6 +44,9 @@ function toProgram(row: Program): Program {
   };
 }
 
+/**
+ * createProgram service/controller utility.
+ */
 export async function createProgram(input: CreateProgramInput): Promise<number> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -62,6 +68,9 @@ export async function createProgram(input: CreateProgramInput): Promise<number> 
   return result.insertId;
 }
 
+/**
+ * findById service/controller utility.
+ */
 export async function findById(id: number): Promise<Program | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & Program[]>(
@@ -74,6 +83,9 @@ export async function findById(id: number): Promise<Program | null> {
   return toProgram(rows[0]);
 }
 
+/**
+ * updateProgram service/controller utility.
+ */
 export async function updateProgram(id: number, input: UpdateProgramInput): Promise<boolean> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -95,6 +107,9 @@ export async function updateProgram(id: number, input: UpdateProgramInput): Prom
   return result.affectedRows > 0;
 }
 
+/**
+ * updateProgramCoordinator service/controller utility.
+ */
 export async function updateProgramCoordinator(
   id: number,
   coordinatorId: number | null,
@@ -125,6 +140,9 @@ function buildFilters(query: ProgramListQuery) {
   return { whereSql, params };
 }
 
+/**
+ * listPrograms service/controller utility.
+ */
 export async function listPrograms(query: ProgramListQuery, page: number, limit: number) {
   const pool = getPool();
   const { whereSql, params } = buildFilters(query);

@@ -1,8 +1,14 @@
+/**
+ * HTTP controller handlers for request orchestration and response shaping.
+ */
 import { NextFunction, Request, Response } from 'express';
 import * as AuthService from '../services/AuthService';
 import { ok } from '../helpers/response';
 import { AppError } from '../helpers/AppError';
 
+/**
+ * register service/controller utility.
+ */
 export async function register(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await AuthService.register(req.body);
@@ -12,6 +18,9 @@ export async function register(req: Request, res: Response, next: NextFunction) 
   }
 }
 
+/**
+ * login service/controller utility.
+ */
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await AuthService.login(req.body);
@@ -21,6 +30,9 @@ export async function login(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * me service/controller utility.
+ */
 export async function me(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

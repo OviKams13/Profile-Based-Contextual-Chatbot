@@ -1,3 +1,6 @@
+/**
+ * HTTP controller handlers for request orchestration and response shaping.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ok } from '../helpers/response';
 import { AppError } from '../helpers/AppError';
@@ -7,6 +10,9 @@ import {
   adminApplicationParamsSchema,
 } from '../validations/adminApplicationValidation';
 
+/**
+ * list service/controller utility.
+ */
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -29,6 +35,9 @@ export async function list(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * getById service/controller utility.
+ */
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -42,6 +51,9 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * accept service/controller utility.
+ */
 export async function accept(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -55,6 +67,9 @@ export async function accept(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * reject service/controller utility.
+ */
 export async function reject(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

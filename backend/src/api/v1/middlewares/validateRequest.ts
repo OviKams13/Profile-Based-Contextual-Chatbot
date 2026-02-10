@@ -1,6 +1,12 @@
+/**
+ * Express middleware for cross-cutting concerns like auth and error handling.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ZodSchema } from 'zod';
 
+/**
+ * validateRequest service/controller utility.
+ */
 export function validateRequest(schema: ZodSchema) {
   return (req: Request, _res: Response, next: NextFunction): void => {
     schema.parse({

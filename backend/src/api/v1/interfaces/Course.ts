@@ -1,3 +1,6 @@
+/**
+ * Shared TypeScript contracts used across API modules.
+ */
 export interface Course {
   id: number | bigint;
   program_id: number | bigint;

@@ -1,3 +1,6 @@
+/**
+ * Service layer for business rules, authorization checks, and orchestration.
+ */
 import { AppError } from '../helpers/AppError';
 import { getPagination } from '../helpers/pagination';
 import {
@@ -8,6 +11,9 @@ import {
   updateStatusReviewed,
 } from '../models/AdminApplicationModel';
 
+/**
+ * listAdminApplications service/controller utility.
+ */
 export async function listAdminApplications(
   filters: AdminApplicationListFilters,
   page?: number,
@@ -24,6 +30,9 @@ export async function listAdminApplications(
   };
 }
 
+/**
+ * getAdminApplicationDetail service/controller utility.
+ */
 export async function getAdminApplicationDetail(id: number) {
   const application = await findApplicationDetailById(id);
   if (!application) {
@@ -48,10 +57,16 @@ async function reviewApplication(id: number, deanUserId: number, status: 'accept
   return updated;
 }
 
+/**
+ * acceptApplication service/controller utility.
+ */
 export async function acceptApplication(id: number, deanUserId: number) {
   return reviewApplication(id, deanUserId, 'accepted');
 }
 
+/**
+ * rejectApplication service/controller utility.
+ */
 export async function rejectApplication(id: number, deanUserId: number) {
   return reviewApplication(id, deanUserId, 'rejected');
 }

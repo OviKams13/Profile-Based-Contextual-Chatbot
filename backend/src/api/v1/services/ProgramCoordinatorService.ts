@@ -1,3 +1,6 @@
+/**
+ * Service layer for business rules, authorization checks, and orchestration.
+ */
 import { AppError } from '../helpers/AppError';
 import {
   createCoordinator,
@@ -12,6 +15,9 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+/**
+ * create service/controller utility.
+ */
 export async function create(dto: CreateProgramCoordinatorInput) {
   const normalizedEmail = normalizeEmail(dto.email);
   const existing = await findByEmail(normalizedEmail);
@@ -32,6 +38,9 @@ export async function create(dto: CreateProgramCoordinatorInput) {
   return coordinator;
 }
 
+/**
+ * getById service/controller utility.
+ */
 export async function getById(id: number) {
   const coordinator = await findById(id);
   if (!coordinator) {
@@ -40,6 +49,9 @@ export async function getById(id: number) {
   return coordinator;
 }
 
+/**
+ * update service/controller utility.
+ */
 export async function update(id: number, dto: UpdateProgramCoordinatorInput) {
   const existing = await findById(id);
   if (!existing) {

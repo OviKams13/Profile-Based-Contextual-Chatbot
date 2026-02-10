@@ -1,3 +1,6 @@
+/**
+ * Data-access functions that execute SQL queries against MySQL tables.
+ */
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { getPool } from '../../../config/DatabaseConfig';
 import { ProgramCoordinator } from '../interfaces/ProgramCoordinator';
@@ -37,6 +40,9 @@ function toCoordinator(row: ProgramCoordinator): ProgramCoordinator {
   };
 }
 
+/**
+ * createCoordinator service/controller utility.
+ */
 export async function createCoordinator(input: CreateProgramCoordinatorInput): Promise<number> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -58,6 +64,9 @@ export async function createCoordinator(input: CreateProgramCoordinatorInput): P
   return result.insertId;
 }
 
+/**
+ * findById service/controller utility.
+ */
 export async function findById(id: number): Promise<ProgramCoordinator | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & ProgramCoordinator[]>(
@@ -70,6 +79,9 @@ export async function findById(id: number): Promise<ProgramCoordinator | null> {
   return toCoordinator(rows[0]);
 }
 
+/**
+ * findByEmail service/controller utility.
+ */
 export async function findByEmail(email: string): Promise<ProgramCoordinator | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & ProgramCoordinator[]>(
@@ -82,6 +94,9 @@ export async function findByEmail(email: string): Promise<ProgramCoordinator | n
   return toCoordinator(rows[0]);
 }
 
+/**
+ * updateCoordinator service/controller utility.
+ */
 export async function updateCoordinator(
   id: number,
   input: UpdateProgramCoordinatorInput,

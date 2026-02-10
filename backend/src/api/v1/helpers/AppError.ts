@@ -1,3 +1,6 @@
+/**
+ * Shared helper utilities for reusable API behavior and transformations.
+ */
 export class AppError extends Error {
   statusCode: number;
   code: string;

@@ -1,3 +1,6 @@
+/**
+ * Data-access functions that execute SQL queries against MySQL tables.
+ */
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { getPool } from '../../../config/DatabaseConfig';
 import { User } from '../../../interfaces/User';
@@ -10,6 +13,9 @@ export interface CreateUserInput {
   role: 'dean' | 'applicant';
 }
 
+/**
+ * findByEmail service/controller utility.
+ */
 export async function findByEmail(email: string): Promise<User | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & User[]>(
@@ -19,6 +25,9 @@ export async function findByEmail(email: string): Promise<User | null> {
   return rows.length ? rows[0] : null;
 }
 
+/**
+ * findById service/controller utility.
+ */
 export async function findById(id: number): Promise<User | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & User[]>(
@@ -28,6 +37,9 @@ export async function findById(id: number): Promise<User | null> {
   return rows.length ? rows[0] : null;
 }
 
+/**
+ * createUser service/controller utility.
+ */
 export async function createUser(input: CreateUserInput): Promise<number> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(

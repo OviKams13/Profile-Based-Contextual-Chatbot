@@ -1,3 +1,6 @@
+/**
+ * Route registration for API v1 endpoints and middleware composition.
+ */
 import { Router } from 'express';
 import * as CourseController from '../controllers/CourseController';
 import { requireAuth } from '../middlewares/requireAuth';

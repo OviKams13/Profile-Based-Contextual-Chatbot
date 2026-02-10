@@ -1,3 +1,6 @@
+/**
+ * Backend module for the UniApply API.
+ */
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';

@@ -1,3 +1,6 @@
+/**
+ * Zod schemas used to validate incoming API payloads and query parameters.
+ */
 import { z } from 'zod';
 
 const nameField = z.string().trim().min(2).max(80);

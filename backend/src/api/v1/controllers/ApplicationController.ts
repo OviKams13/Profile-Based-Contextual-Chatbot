@@ -1,9 +1,15 @@
+/**
+ * HTTP controller handlers for request orchestration and response shaping.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ok } from '../helpers/response';
 import { AppError } from '../helpers/AppError';
 import * as ApplicationService from '../services/ApplicationService';
 import { listApplicationsSchema, submitApplicationSchema } from '../validations/applicationValidation';
 
+/**
+ * submit service/controller utility.
+ */
 export async function submit(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -21,6 +27,9 @@ export async function submit(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * myList service/controller utility.
+ */
 export async function myList(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

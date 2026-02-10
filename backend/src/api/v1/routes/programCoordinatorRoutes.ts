@@ -1,3 +1,6 @@
+/**
+ * Route registration for API v1 endpoints and middleware composition.
+ */
 import { Router } from 'express';
 import * as ProgramCoordinatorController from '../controllers/ProgramCoordinatorController';
 import { requireAuth } from '../middlewares/requireAuth';

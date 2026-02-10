@@ -1,3 +1,6 @@
+/**
+ * HTTP controller handlers for request orchestration and response shaping.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ok } from '../helpers/response';
 import { AppError } from '../helpers/AppError';
@@ -8,6 +11,9 @@ import {
   updateCoordinatorSchema,
 } from '../validations/programCoordinatorValidation';
 
+/**
+ * create service/controller utility.
+ */
 export async function create(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {
@@ -21,6 +27,9 @@ export async function create(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * getById service/controller utility.
+ */
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
     const { params } = coordinatorIdSchema.parse({ params: req.params });
@@ -31,6 +40,9 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * update service/controller utility.
+ */
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) {

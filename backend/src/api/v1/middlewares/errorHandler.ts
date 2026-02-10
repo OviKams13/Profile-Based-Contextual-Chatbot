@@ -1,8 +1,14 @@
+/**
+ * Express middleware for cross-cutting concerns like auth and error handling.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { AppError } from '../helpers/AppError';
 import { fail } from '../helpers/response';
 
+/**
+ * errorHandler service/controller utility.
+ */
 export function errorHandler(
   err: unknown,
   _req: Request,

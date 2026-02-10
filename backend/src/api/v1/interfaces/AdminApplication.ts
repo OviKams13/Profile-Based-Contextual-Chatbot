@@ -1,3 +1,6 @@
+/**
+ * Shared TypeScript contracts used across API modules.
+ */
 export interface AdminApplicationListItem {
   id: number;
   status: 'submitted' | 'accepted' | 'rejected';

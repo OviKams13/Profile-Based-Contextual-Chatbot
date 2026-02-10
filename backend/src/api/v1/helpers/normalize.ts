@@ -1,3 +1,6 @@
+/**
+ * Shared helper utilities for reusable API behavior and transformations.
+ */
 export function trimString(value: string): string {
   return value.trim();
 }

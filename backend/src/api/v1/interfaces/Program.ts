@@ -1,3 +1,6 @@
+/**
+ * Shared TypeScript contracts used across API modules.
+ */
 export interface Program {
   id: number | bigint;
   created_by: number | bigint;

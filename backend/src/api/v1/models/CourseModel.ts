@@ -1,3 +1,6 @@
+/**
+ * Data-access functions that execute SQL queries against MySQL tables.
+ */
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { getPool } from '../../../config/DatabaseConfig';
 import { Course } from '../interfaces/Course';
@@ -49,6 +52,9 @@ function toCourse(row: Course): Course {
   };
 }
 
+/**
+ * createCourse service/controller utility.
+ */
 export async function createCourse(input: CreateCourseInput): Promise<number> {
   const pool = getPool();
   if (input.created_by !== undefined) {
@@ -99,6 +105,9 @@ export async function createCourse(input: CreateCourseInput): Promise<number> {
   return result.insertId;
 }
 
+/**
+ * findById service/controller utility.
+ */
 export async function findById(id: number): Promise<Course | null> {
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[] & Course[]>(
@@ -111,6 +120,9 @@ export async function findById(id: number): Promise<Course | null> {
   return toCourse(rows[0]);
 }
 
+/**
+ * findByProgramAndCode service/controller utility.
+ */
 export async function findByProgramAndCode(
   programId: number,
   courseCode: string,
@@ -126,6 +138,9 @@ export async function findByProgramAndCode(
   return toCourse(rows[0]);
 }
 
+/**
+ * listByProgram service/controller utility.
+ */
 export async function listByProgram(programId: number, filters: ListCourseFilters) {
   const pool = getPool();
   const whereClauses: string[] = ['program_id = ?'];
@@ -148,6 +163,9 @@ export async function listByProgram(programId: number, filters: ListCourseFilter
   return rows.map((row) => toCourse(row));
 }
 
+/**
+ * updateCourse service/controller utility.
+ */
 export async function updateCourse(id: number, input: UpdateCourseInput): Promise<boolean> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>(
@@ -171,6 +189,9 @@ export async function updateCourse(id: number, input: UpdateCourseInput): Promis
   return result.affectedRows > 0;
 }
 
+/**
+ * deleteCourse service/controller utility.
+ */
 export async function deleteCourse(id: number): Promise<boolean> {
   const pool = getPool();
   const [result] = await pool.query<ResultSetHeader>('DELETE FROM courses WHERE id = ?', [id]);

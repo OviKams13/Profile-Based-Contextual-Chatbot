@@ -1,6 +1,12 @@
+/**
+ * Express middleware for cross-cutting concerns like auth and error handling.
+ */
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../helpers/AppError';
 
+/**
+ * requireRole service/controller utility.
+ */
 export function requireRole(role: 'dean' | 'applicant') {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user) {
